@@ -1,6 +1,11 @@
 import React, {Component} from 'react'
 import {Redirect} from 'react-router-dom'
+import {Layout} from 'antd'
 import memoryUtils from '../../utils/memoryUtils'
+import LeftNav from '../../components/left-nav'
+import Header from '../../components/header'
+
+const { Footer, Sider, Content } = Layout;
 
 /**
  * 后台管理的路由组件
@@ -14,9 +19,17 @@ export default class Admin extends Component {
             return <Redirect to='/login' />
         }
         return (
-            <div>
-                <h1>Hello: {user.username}!</h1>
-            </div>
+            <Layout style={{height: '100%'}}>
+                <Sider>
+                    <LeftNav />
+                </Sider>
+
+                <Layout>
+                    <Header>Header</Header>
+                    <Content style={{backgroundColor: '#fff'}}>Content</Content>
+                    <Footer style={{textAlign: 'center',color: '#cccccc'}}>这地球不停自转,一点一线一圈</Footer>
+                </Layout>
+            </Layout>
         )
     }
 }
