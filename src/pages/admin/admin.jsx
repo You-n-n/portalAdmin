@@ -1,14 +1,23 @@
 import React, {Component} from 'react'
-import {Redirect} from 'react-router-dom'
+import {Redirect, Route, Switch} from 'react-router-dom'
 import {Layout} from 'antd'
 import memoryUtils from '../../utils/memoryUtils'
 import LeftNav from '../../components/left-nav'
 import Header from '../../components/header'
+import Home from '../home/home'
+import Category from '../category/category'
+import Product from '../product/product'
+import User from '../user/user'
+import Role from '../role/role'
+import Bar from '../charts/bar'
+import Line from '../charts/line'
+import Pie from '../charts/pie'
 
 const { Footer, Sider, Content } = Layout;
 
 /**
  * 后台管理的路由组件
+ * 天气接口:https://tianqiapi.com/api?version=v6&appid=25784789&appsecret=Jg3n4SdS
  */
 export default class Admin extends Component {
     render() {
@@ -25,8 +34,21 @@ export default class Admin extends Component {
                 </Sider>
 
                 <Layout>
-                    <Header>Header</Header>
-                    <Content style={{backgroundColor: '#fff'}}>Content</Content>
+                    <Header>头部</Header>
+                    <Content style={{backgroundColor: '#fff'}}>
+                        <Switch>
+                            <Route path='/home' component={Home} />
+                            <Route path='/category' component={Category} />
+                            <Route path='/product' component={Product} />
+                            <Route path='/role' component={Role} />
+                            <Route path='/user' component={User} />
+                            <Route path='/charts/bar' component={Bar} />
+                            <Route path='/charts/line' component={Line} />
+                            <Route path='/charts/pie' component={Pie} />
+                            <Redirect to='/home' />
+                        </Switch>
+                    </Content>
+
                     <Footer style={{textAlign: 'center',color: '#cccccc'}}>这地球不停自转,一点一线一圈</Footer>
                 </Layout>
             </Layout>
