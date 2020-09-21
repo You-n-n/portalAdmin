@@ -27,7 +27,6 @@ class Login extends Component {
               if(result.status==='0'){//成功
                 //显示成功
                 message.success('登陆成功')
-
                 //  把user保存到内存中
                 const user = result.data
                 memoryUtils.user = user  //保存到内存中
@@ -41,7 +40,7 @@ class Login extends Component {
               }
 
             }else{
-                console.log('校验失败')
+                //console.log('校验失败')
             }
           });
         //得到强大的form对象
@@ -56,7 +55,7 @@ class Login extends Component {
      * callback() 验证通过
      */
     validatePwd = (rule, value, callback) => {
-        console.log('validatePwd',rule,value)
+        //console.log('validatePwd',rule,value)
         if(!value)
         {
         callback("必须输入密码") //验证失败,并提示文本

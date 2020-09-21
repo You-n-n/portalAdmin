@@ -5,10 +5,10 @@
  * 1. 优化 统一处理请求异常
  */
 
- import axios from 'axios'
- import {message} from 'antd'
+import axios from 'axios'
+import {message} from 'antd'
 
- export default function ajax(url, data={}, type='GET'){
+export default function ajax(url, data={}, type='GET'){
 
     return new Promise((resolve, reject) => {
         let promise 
@@ -31,7 +31,7 @@
     })
 
     
- }
+}
 
  // 请求登录接口
  //ajax('/portal/login',{username:'tom',password:'123'},'POST').then()
