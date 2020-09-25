@@ -21,6 +21,15 @@ export const reqAddCategorys = (categoryName,parentId) => ajax(BASE + '/manage/c
 export const reqUpdateCategorys = (categoryName,id) => ajax(BASE + '/manage/category/update' , {categoryName,id}, 'POST')
 //删除分类
 export const reqDelCategorys = (id) => ajax(BASE + '/manage/category/del' , {id}, 'POST')
+//获取商品分页列表
+export const reqProducts = (pageNum, pageSize) => ajax(BASE + '/manage/product/all' , {pageNum, pageSize}, 'GET')
+// 搜索商品分页列表 ,searchType用于判断()
+export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType}) => ajax(BASE + '/manage/product/search' , {
+    pageNum,
+    pageSize,
+    [searchType]: searchName,
+    },
+     'GET')
 
 // 添加用户
 //export const reqAddUser = () => ajax('manage/user/add', user, 'POST')
