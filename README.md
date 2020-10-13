@@ -1,2 +1,3 @@
-废弃dev分支
-
+# 启动
+- npm i
+- npm start
