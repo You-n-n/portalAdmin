@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {Card, Icon, List} from 'antd'
 import imgs from '../../assets/images/ad1.jpg'
+import LinkButton from '../../components/link-button'
+import {reqCategory} from '../../api'
 
 const Item = List.Item
 /**
@@ -8,11 +10,44 @@ const Item = List.Item
  */
 
  export default class ProductDetail extends Component{
+
+    state = {
+        cName1:'',//一级分类名称
+        cName2:'',//二级分类名称
+    }
+
+    async componentDidMount (){
+        //得到当前商品的分类Id
+        const {pCategoryId, categoryId} = this.props.location.state.product
+        if(pCategoryId==='0'){
+            const result = await reqCategory(categoryId)
+            const cName1 = result.data.categoryName
+            this.setState({cName1})
+        }else{
+            debugger
+            const result1 = await reqCategory(pCategoryId)
+            const result2 = await reqCategory(categoryId)
+            const cName1 = result1.data.categoryName
+            const cName2 = result2.data.categoryName
+            this.setState({
+                cName1,
+                cName2
+            })
+        }
+    }
+
     render(){
+
+        //读取携带过来的数据
+        const {productName, description, price, detail} = this.props.location.state.product
+        const {cName1, cName2} = this.state
 
         const title = (
             <span>
-                <Icon type='arrow-left' />
+                <LinkButton>
+                    <Icon type='arrow-left' style={{color: 'green', marginRight: 10, fontSize: 20}} 
+                    onClick={() => this.props.history.goBack()} />
+                </LinkButton>
                 <span>商品详情</span>
             </span>
         )
@@ -22,19 +57,19 @@ const Item = List.Item
                 <List>
                     <Item>
                         <span className="left">商品名称:</span>
-                        <span>联想ThinkPad 翼480</span>
+                        <span>{productName}</span>
                     </Item>
                     <Item>
                         <span className="left">商品描述:</span>
-                        <span>阿斯蒂芬看啥看你的开发商就服你看见爱上年份的</span>
+                        <span>{description}</span>
                     </Item>
                     <Item>
                         <span className="left">商品价格:</span>
-                        <span>6666元</span>
+                        <span>{price}元</span>
                     </Item>
                     <Item>
                         <span className="left">所属分类:</span>
-                        <span>电脑 --{'>'} 笔记本</span>
+                        <span >{cName1} --{'>'} {cName2}</span>
                     </Item>
                     <Item>
                         <span className="left">商品图片:</span>
@@ -53,7 +88,7 @@ const Item = List.Item
                     </Item>
                     <Item>
                         <span className="left">商品详情:</span>
-                        <span dangerouslySetInnerHTML={{__html: '<h1>商品详情的内容标题</h1>'}} />
+                        <span dangerouslySetInnerHTML={{__html: detail}} />
                     </Item>
                 </List>
             </Card>
