@@ -24,7 +24,6 @@ const Item = List.Item
             const cName1 = result.data.categoryName
             this.setState({cName1})
         }else{
-            debugger
             const result1 = await reqCategory(pCategoryId)
             const result2 = await reqCategory(categoryId)
             const cName1 = result1.data.categoryName

@@ -21,8 +21,8 @@ class Login extends Component {
             if (!err) {
               //console.log('提交登录的ajax', values);
               //请求登录
-              const {username, password} = values
-              const result = await reqLogin(username, password)
+              const {username, password,verification} = values
+              const result = await reqLogin(username, password,verification)
               //console.log('请求成功',response.data)
               if(result.status==='0'){//成功
                 //显示成功
@@ -37,6 +37,7 @@ class Login extends Component {
 
               }else{//失败
                   message.error(result.msg)
+                  this.getCode()
               }
 
             }else{
@@ -70,7 +71,32 @@ class Login extends Component {
         }
     }
 
+    validateCode = (rule, value, callback) => {
+        //console.log('validatePwd',rule,value)
+        if(!value)
+        {
+        callback("必须输入验证码") //验证失败,并提示文本
+        } else if (value.length<4){
+            callback("验证码长度不能小于4位")
+        } else if (value.length>12){
+            callback("验证码长度不能超过8位")
+        } else if (!/^[a-zA-Z0-9_]+$/.test(value)){
+            callback("验证码格式不正确")
+        } else {
+            callback()
+        }
+    }
+
+    getCode ()  {
+        document.getElementById("img").src='/img/getVerifyCode'+Math.random()
+        //debugger
+    }
     
+    //在第一次render()之前执行一次
+    //为第一次render()渲染准备数据
+    // componentWillMount () {
+    //     this.getCode()
+    // }
 
     render() {
 
@@ -114,13 +140,34 @@ class Login extends Component {
                                 <Input prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>} type="password"
                                        placeholder="密码"/>,
                             )}
-
                         </Item>
+
+                        <div className='login-verification'>
+                            <div className='login-verification1'>
+                                <Item style={{width:150}}>
+                                    {getFieldDecorator('verification', {
+                                        rules: [
+                                            {
+                                                validator: this.validateCode,
+                                            },
+                                        ],
+                                    })(
+                                        <Input prefix={<Icon type="edit" style={{color: 'rgba(0,0,0,.25)'}}/>} type="verification"
+                                            placeholder="验证码"/>,
+                                    )}
+                                </Item>
+                            </div>
+
+                            <div className='login-verification2'>
+                                <img id="img" style={{height:50,width:100}} src='/img/getVerifyCode' onClick={this.getCode} alt="验证码" />
+                            </div>
+                        </div>
+
                         <Item> <Button type="primary" htmlType="submit" className="login-form-button"> 登录 </Button>
                         </Item>
                     </Form>
                 </section>
-            </div>
+            </div> 
         )
     }
 }

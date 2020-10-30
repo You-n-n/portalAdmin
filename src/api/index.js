@@ -11,8 +11,9 @@ const BASE = ''
 //     return ajax('/portal/login', {username,password}, 'POST')
 //  }
 
-export const reqLogin = (username, password) => ajax(BASE + '/portal/login', {username,password}, 'POST') 
-
+export const reqLogin = (username, password,verification) => ajax(BASE + '/portal/login', {username,password,verification}, 'POST') 
+//获取验证码
+export const reqGetCode = () => ajax(BASE + '/img/getVerifyCode',{})
 //获取 一级/二级列表
 export const reqCategorys = (parentId) => ajax(BASE + '/manage/category/all' , {parentId})
 //添加分类
@@ -24,7 +25,7 @@ export const reqDelCategorys = (id) => ajax(BASE + '/manage/category/del' , {id}
 //获取一个分类
 export const reqCategory = (categoryId) => ajax(BASE + '/manage/category/info', {categoryId}, 'GET')
 //获取商品分页列表
-export const reqProducts = (pageNum, pageSize) => ajax(BASE + '/manage/product/all' , {pageNum, pageSize}, 'GET')
+export const reqProducts = (pageNum, pageSize) => ajax(BASE + '/manage/product/all' , ({pageNum, pageSize}), 'GET')
 // 搜索商品分页列表 ,searchType用于判断()
 export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType}) => ajax(BASE + '/manage/product/search' , {
     pageNum,
@@ -32,6 +33,9 @@ export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType}) => a
     [searchType]: searchName,
     },
      'GET')
+
+//获取留言板信息
+export const reqGetAllMsgBoard = () => ajax(BASE + '/manage/msg/getMsgBoard' , {}, 'GET')
 
 
 // 添加用户
