@@ -3,6 +3,7 @@ import {Card, Table, Button, Icon, message, Modal} from 'antd'
 import LinkButton from '../../components/link-button'
 import {reqCategorys, reqUpdateCategorys, reqAddCategorys, reqDelCategorys} from '../../api/'
 import AddForm from './add-form'
+import memoryUtils from '../../utils/memoryUtils'
 import UpdateForm from './update-form'
 
 /**
@@ -135,11 +136,11 @@ export default class Category extends Component{
                 const parentId = this.form.getFieldValue('parentId').toString()
                 const parentId1 = this.form.getFieldValue('parentId')
                 const {categoryName} = values
-        
+                const {account_name} = memoryUtils.user;
                 // 清除输入数据
                 this.form.resetFields()
         
-                const result = await reqAddCategorys(categoryName, parentId)
+                const result = await reqAddCategorys(categoryName, parentId,account_name)
                 //console.log('result',result)
                 if(result.status ==='0'){
                     message.success(result.msg)
@@ -175,12 +176,12 @@ export default class Category extends Component{
                 //准备数据
                 const id = this.category.id
                 const {categoryName} = values
-                
+                const {account_name} = memoryUtils.user;
                 //清楚输入数据
                 this.form.resetFields()
         
                 //2. 发送请求更新分类
-                const result = await reqUpdateCategorys(categoryName,id)
+                const result = await reqUpdateCategorys(categoryName,id,account_name)
                 //console.log('result',result)
                 //console.log('object',result.PromiseValue)
                 if (result.status ==='0'){
@@ -198,7 +199,8 @@ export default class Category extends Component{
     delCategory= async (category) => {
         //debugger
         const id = category.id
-        const result = await reqDelCategorys(id)
+        const {account_name} = memoryUtils.user;
+        const result = await reqDelCategorys(id,account_name)
         //console.log(result.status)
         if(result.status === '0'){
             message.success(result.msg)

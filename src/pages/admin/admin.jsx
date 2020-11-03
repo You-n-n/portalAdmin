@@ -9,6 +9,7 @@ import Category from '../category/category'
 import Product from '../product/product'
 import User from '../user/user'
 import Role from '../role/role'
+import Log from '../opLog/log'
 import Bar from '../charts/bar'
 import Line from '../charts/line'
 import Pie from '../charts/pie'
@@ -42,6 +43,7 @@ export default class Admin extends Component {
                             <Route path='/product' component={Product} />
                             <Route path='/role' component={Role} />
                             <Route path='/user' component={User} />
+                            <Route path='/log' component={Log} />
                             <Route path='/charts/bar' component={Bar} />
                             <Route path='/charts/line' component={Line} />
                             <Route path='/charts/pie' component={Pie} />
@@ -49,7 +51,7 @@ export default class Admin extends Component {
                         </Switch>
                     </Content>
 
-                    <Footer style={{textAlign: 'center',color: '#cccccc'}}>这地球不停自转,一点一线一圈</Footer>
+                    <Footer style={{textAlign: 'center',color: '#cccccc'}}>这地球不停自转🌎,一点一线一圈🙋</Footer>
                 </Layout>
             </Layout>
         )

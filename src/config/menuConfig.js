@@ -31,6 +31,11 @@ const menuList = [
         key: '/role',
         icon: 'safety',
     },
+    {
+        title: '操作日志',
+        key: '/log',
+        icon: 'solution',
+    },
 
     {
         title: '图形图表',

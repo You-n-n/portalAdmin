@@ -17,11 +17,11 @@ export const reqGetCode = () => ajax(BASE + '/img/getVerifyCode',{})
 //获取 一级/二级列表
 export const reqCategorys = (parentId) => ajax(BASE + '/manage/category/all' , {parentId})
 //添加分类
-export const reqAddCategorys = (categoryName,parentId) => ajax(BASE + '/manage/category/add' , {categoryName,parentId}, 'POST')
+export const reqAddCategorys = (categoryName,parentId,account_name) => ajax(BASE + '/manage/category/add' , {categoryName,parentId,account_name}, 'POST')
 //更新分类
-export const reqUpdateCategorys = (categoryName,id) => ajax(BASE + '/manage/category/update' , {categoryName,id}, 'POST')
+export const reqUpdateCategorys = (categoryName,id,account_name) => ajax(BASE + '/manage/category/update' , {categoryName,id,account_name}, 'POST')
 //删除分类
-export const reqDelCategorys = (id) => ajax(BASE + '/manage/category/del' , {id}, 'POST')
+export const reqDelCategorys = (id,account_name) => ajax(BASE + '/manage/category/del' , {id,account_name}, 'POST')
 //获取一个分类
 export const reqCategory = (categoryId) => ajax(BASE + '/manage/category/info', {categoryId}, 'GET')
 //获取商品分页列表
@@ -33,7 +33,8 @@ export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType}) => a
     [searchType]: searchName,
     },
      'GET')
-
+// 更新商品的状态
+export const reqUpdateStatus = (id, productStatus) => ajax(BASE + '/manage/product/updateStatus' , {id, productStatus}, 'POST')
 //获取留言板信息
 export const reqGetAllMsgBoard = () => ajax(BASE + '/manage/msg/getMsgBoard' , {}, 'GET')
 

@@ -16,7 +16,7 @@ import LinkButton from "../link-button";
 class Header extends Component {
 
     state = {
-        currentTime: formateDate(Date.now()), //当前时间字符串
+        currentTime: formateDate(Date.now(),'yyyy-MM-dd hh:mm:ss'), //当前时间字符串
         wea: '', 
         city: '',
     };
@@ -97,13 +97,13 @@ class Header extends Component {
     render() {
 
         const {currentTime, city, wea} = this.state;
-        const {username} = memoryUtils.user;
+        const {account_name} = memoryUtils.user;
         //得到当前需要显示的title
         const title = this.getTitle();
         return (
             <div className='header'>
                 <div className='header-top'>
-                    <span>欢迎,{username}  </span>
+                    <span>欢迎您, {account_name}  </span>
                     <LinkButton onClick={this.logout}>退出</LinkButton>
                 </div>
                 <div className='header-bottom'>
