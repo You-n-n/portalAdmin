@@ -172,7 +172,7 @@ export default class Category extends Component{
                     showStatus: 0
                 })
     
-                debugger
+                //debugger
                 //准备数据
                 const id = this.category.id
                 const {categoryName} = values
