@@ -1,48 +1,13 @@
 import React, {Component} from 'react'
-import { Table, Divider, Tag, message } from 'antd';
+import { Table, Button, message, Card ,Select, Input,} from 'antd';
 import LinkButton from '../../components/link-button'
 import {reqGetOperations} from '../../api/'
 /**
  * 用户路由
  */
-const data = [
-    {
-        acctId: "超级管理员",
-        logCntt: "修改: “茶品” ==> “茶品1”",
-        opMenu: "品类管理",
-        opType: "修改"
-    },
-    {
-        acctId: "超级管理员",
-        logCntt: "新增: 一级分类==>“茶品”",
-        opMenu: "品类管理",
-        opType: "新增"
-    },
-    {
-        acctId: "超级管理员",
-        logCntt: "新增: 商品==>“呢绒大衣”",
-        opMenu: "商品管理",
-        opType: "新增"
-    },
-    {
-        acctId: "用户1",
-        logCntt: "删除: 二级分类==>“龙井”",
-        opMenu: "品类管理",
-        opType: "删除"
-    },
-    {
-        acctId: "超级管理员",
-        logCntt: "修改: “衣服1” ==> “衣服”",
-        opMenu: "品类管理",
-        opType: "修改"
-    },
-    {
-        acctId: "超级管理员",
-        logCntt: "新增: 一级分类==>“衣服1”",
-        opMenu: "品类管理",
-        opType: "新增"
-    },
-];
+
+const Option = Select.Option
+
 export default class Log extends Component{
 
     state = {
@@ -50,7 +15,8 @@ export default class Log extends Component{
       operations: [], //日志的数组
       loading: false, //加载...
       searchName:'', //搜索的关键字
-      searchType:'productName', //根据哪个字段进行搜索
+      opType:'any', //操作类型
+      opMenu:'any' // 操作菜单
     }
 
     //初始化table 的列的数组
@@ -89,15 +55,15 @@ export default class Log extends Component{
           dataIndex: 'opTime',
           key: 'opTime',
         },
-        {
-          title: 'Action',
-          key: 'action',
-          render: () => (
-          <span>
-          <LinkButton onClick={'/'}>详情</LinkButton>
-          </span>
-          ),
-        },
+        // {
+        //   title: 'Action',
+        //   key: 'action',
+        //   render: () => (
+        //   <span>
+        //   <LinkButton onClick={'/'}>详情</LinkButton>
+        //   </span>
+        //   ),
+        // },
         ];
 }
 
@@ -126,15 +92,70 @@ componentDidMount () {
 }
 
     render() {
-      const {operations, loading} = this.state
+      const {operations, loading, opType, opMenu, daiding} = this.state
+
+      //card的左侧标题
+      const title =(
+                <span>
+                  搜索
+                </span>
+          )
+          //card的右侧标题
+          const extra = (
+            <span>
+              <span>操作人</span>
+                <Input 
+                    placeholder='操作人' 
+                    style={{width: 150, margin:'0 15px'}} 
+                    value={daiding} 
+                />
+
+              <span>操作类型</span>
+                <Select 
+                    value={opMenu} 
+                    style={{width: 150, margin:'0 15px'}} 
+                    onChange={value => this.setState({opMenu:value})}
+                >
+                    <Option value='any'>请选择</Option>
+                    <Option value='CATEGORY_MANAGEMENT'>品类管理</Option>
+                    <Option value='PRODUCT_MANAGEMENT'>商品管理</Option>
+                    <Option value='USER_MANAGEMENT'>用户管理</Option>
+                    <Option value='ROLE_MANAGEMENT'>角色管理</Option>
+                </Select>
+
+              <span>操作类型</span>
+                <Select 
+                    value={opType} 
+                    style={{width: 150, margin:'0 15px'}} 
+                    onChange={value => this.setState({opType:value})}
+                >
+                    <Option value='any'>请选择</Option>
+                    <Option value='add'>新增</Option>
+                    <Option value='upd'>修改</Option>
+                    <Option value='del'>删除</Option>
+                </Select>
+                
+                <Button type='primary' style={{margin:'0 100px'}} >搜索</Button>
+            </span>
+          )
+
         return (
-            <Table columns={this.columns} 
-            rowKey="logId"
-            bordered
-            dataSource={operations} 
-            pagination={{defaultPageSize:8, showQuickJumper:true}}
-            loading={loading}
-            />
+          <div>
+            <div>
+            </div>
+
+            <div>
+            <Card title={title} extra={extra}>
+                  <Table columns={this.columns} 
+                  rowKey="logId"
+                  bordered
+                  dataSource={operations} 
+                  pagination={{defaultPageSize:8, showQuickJumper:true}}
+                  loading={loading}
+                  />
+                </Card>
+            </div>
+          </div>
         )
     }
 }
