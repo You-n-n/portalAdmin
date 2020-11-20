@@ -55,7 +55,7 @@ export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType}) => a
     },
      'GET')
 // 更新商品的状态
-export const reqUpdateStatus = (id, productStatus) => ajax(BASE + '/manage/product/updateStatus' , {id, productStatus}, 'POST')
+export const reqUpdateStatus = (id, productStatus,account_name) => ajax(BASE + '/manage/product/updateStatus' , {id, productStatus,account_name}, 'POST')
 
 
 /**
@@ -65,7 +65,15 @@ export const reqUpdateStatus = (id, productStatus) => ajax(BASE + '/manage/produ
 //获取留言板信息
 export const reqGetAllMsgBoard = () => ajax(BASE + '/manage/msg/getMsgBoard' , {}, 'GET')
 //获取所有日志信息
-export const reqGetOperations = () => ajax(BASE + '/ws/log/info' , {}, 'GET')
+export const reqGetOperations = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'GET')
+//按条件查询日志信息
+export const reqGetOperationByAny = ({pageNum,pageSize,searchName,opType,opMenu}) => ajax(BASE + '/ws/log/searchByAny' , ({
+    pageNum,
+    pageSize,
+    opType, 
+    opMenu, 
+    searchName
+}), 'GET')
 
 //获取天气信息
 export const reqWeather = () => {

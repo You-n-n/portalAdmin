@@ -3,6 +3,7 @@ import {Card, Select, Input, Icon, Button, Table, message} from 'antd'
 import LinkButton from '../../components/link-button'
 import {reqProducts, reqSearchProducts,reqUpdateStatus} from '../../api'
 import {PAGE_SIZE} from '../../utils/constants'
+import memoryUtils from '../../utils/memoryUtils'
 /**
  * product 的默认页面子路由
  */
@@ -103,7 +104,8 @@ export default class ProductHome extends Component{
      * 更新指定商品的状态
      */
     updateStatus = async(id,productStatus) => {
-        const result = await reqUpdateStatus(id,productStatus)
+        const {account_name} = memoryUtils.user;
+        const result = await reqUpdateStatus(id,productStatus,account_name)
         if(result.status==='0'){
             message.success(result.msg)
             this.getProducts(this.pageNum)
@@ -127,30 +129,36 @@ export default class ProductHome extends Component{
           
 
         const title = (
-            <span>
-                <Select 
-                    value={searchType} 
-                    style={{width: 150}} 
-                    onChange={value => this.setState({searchType:value})}
-                >
-                    <Option value='productName'>按名称搜索</Option>
-                    <Option value='description'>按描述搜索</Option>
-                </Select>
-                <Input 
-                    placeholder='关键字' 
-                    style={{width: 150, margin:'0 15px'}} 
-                    value={searchName} 
-                    onChange={event => this.setState({searchName:event.target.value})}
-                />
-                <Button type='primary' onClick={() => this.getProducts(1)}>搜索</Button>
-            </span>
+                <span>
+                  搜索栏
+                </span>
         )
 
         const extra = (
-            <Button type='primary' onClick={() => this.props.history.push('/product/addupdate')}>
-                <Icon type='plus' />
-                    添加商品
-            </Button>
+            <div>
+                    <span>
+                        <Select 
+                            value={searchType} 
+                            style={{width: 150}} 
+                            onChange={value => this.setState({searchType:value})}
+                        >
+                            <Option value='productName'>按名称搜索 : </Option>
+                            <Option value='description'>按描述搜索 : </Option>
+                        </Select>
+                        <Input 
+                            placeholder='搜索内容' 
+                            style={{width: 150, margin:'0 15px'}} 
+                            value={searchName} 
+                            onChange={event => this.setState({searchName:event.target.value})}
+                        />
+                        <Button type='primary' onClick={() => this.getProducts(1)} style={{margin:'0 50px'}}>搜索</Button>
+                    </span>
+
+                    <Button type='primary' onClick={() => this.props.history.push('/product/addupdate')}>
+                        <Icon type='plus' />
+                        添加商品
+                    </Button>
+            </div>
         )
 
         return(

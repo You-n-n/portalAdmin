@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import { Table, Button, message, Card ,Select, Input,} from 'antd';
 import LinkButton from '../../components/link-button'
-import {reqGetOperations} from '../../api/'
+import {reqGetOperations, reqGetOperationByAny} from '../../api/';
+import {OPER_PAGE_SIZE} from '../../utils/constants'
 /**
  * 用户路由
  */
@@ -15,8 +16,9 @@ export default class Log extends Component{
       operations: [], //日志的数组
       loading: false, //加载...
       searchName:'', //搜索的关键字
-      opType:'any', //操作类型
-      opMenu:'any' // 操作菜单
+      opType:'', //操作类型
+      opMenu:'', // 操作菜单
+      searchName: ''
     }
 
     //初始化table 的列的数组
@@ -73,31 +75,47 @@ export default class Log extends Component{
 
 //发送异步ajax请求
 componentDidMount () {
-  this.getOperations()
+  this.getOperations(1)
 }
 
-  getOperations = async () => {
+  getOperations = async (pageNum) => {
+    this.pageNum = pageNum //保存pageNum,让其他方法可以看见
     this.setState({loading: true})
-    const result = await reqGetOperations()
+    const {searchName, opType, opMenu} = this.state
+    let result
+    if(searchName || opType || opMenu){
+      result = await reqGetOperationByAny({pageNum,pageSize:OPER_PAGE_SIZE,searchName,opType,opMenu})
+    }else{
+      result = await reqGetOperations(pageNum,OPER_PAGE_SIZE)
+    }
     this.setState({loading: false})
     if(result.status==='0'){
-      //得到的可能是一级也可能是二级
-      const operations = result.data
-      this.setState({
-        operations : operations
-      })
-  }else {
+      const {total,list} = result.data
+            this.setState({
+                total,
+                operations: list
+            })
+    }else {
+      this.setState({loading:false})
       message.error('获取日志信息失败')
-  }
+    }
 }
 
+  getSetState = () => {
+    this.setState({
+        searchName:'',
+        opType:'',
+        opMenu:''
+    })
+  }
+
     render() {
-      const {operations, loading, opType, opMenu, daiding} = this.state
+      const {operations, loading, opType, opMenu, searchName, total} = this.state
 
       //card的左侧标题
       const title =(
                 <span>
-                  搜索
+                  搜索栏
                 </span>
           )
           //card的右侧标题
@@ -107,16 +125,17 @@ componentDidMount () {
                 <Input 
                     placeholder='操作人' 
                     style={{width: 150, margin:'0 15px'}} 
-                    value={daiding} 
+                    value={searchName} 
+                    onChange={event => this.setState({searchName:event.target.value})}
                 />
 
-              <span>操作类型</span>
+              <span>操作菜单</span>
                 <Select 
                     value={opMenu} 
                     style={{width: 150, margin:'0 15px'}} 
                     onChange={value => this.setState({opMenu:value})}
                 >
-                    <Option value='any'>请选择</Option>
+                    <Option value=''>请选择</Option>
                     <Option value='CATEGORY_MANAGEMENT'>品类管理</Option>
                     <Option value='PRODUCT_MANAGEMENT'>商品管理</Option>
                     <Option value='USER_MANAGEMENT'>用户管理</Option>
@@ -129,13 +148,14 @@ componentDidMount () {
                     style={{width: 150, margin:'0 15px'}} 
                     onChange={value => this.setState({opType:value})}
                 >
-                    <Option value='any'>请选择</Option>
-                    <Option value='add'>新增</Option>
-                    <Option value='upd'>修改</Option>
-                    <Option value='del'>删除</Option>
+                    <Option value=''>请选择</Option>
+                    <Option value='1'>新增</Option>
+                    <Option value='2'>修改</Option>
+                    <Option value='3'>删除</Option>
                 </Select>
                 
-                <Button type='primary' style={{margin:'0 100px'}} >搜索</Button>
+                <Button type='primary' onClick={() => this.getOperations(1)} style={{margin:'0 15px 0 100px'}} >搜索</Button>
+                <Button type='primary' onClick={() => this.getSetState()} >重置</Button>
             </span>
           )
 
@@ -150,7 +170,12 @@ componentDidMount () {
                   rowKey="logId"
                   bordered
                   dataSource={operations} 
-                  pagination={{defaultPageSize:8, showQuickJumper:true}}
+                  pagination={{
+                    total,
+                    defaultPageSize:OPER_PAGE_SIZE, 
+                    showQuickJumper:true,
+                    onChange: this.getOperations
+                  }}
                   loading={loading}
                   />
                 </Card>
