@@ -56,6 +56,10 @@ export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType}) => a
      'GET')
 // 更新商品的状态
 export const reqUpdateStatus = (id, productStatus,account_name) => ajax(BASE + '/manage/product/updateStatus' , {id, productStatus,account_name}, 'POST')
+//添加商品
+export const reqUploadProduct = (product) => ajax(BASE + '/manage/product/add' , {product}, 'POST')
+//上传图片
+export const reqUploadImage = (image) => ajax(BASE + '/manage/product/uploadImages', { image}, 'POST')
 
 
 /**

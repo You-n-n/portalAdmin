@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Card, Icon, List} from 'antd'
-import imgs from '../../assets/images/ad1.jpg'
 import LinkButton from '../../components/link-button'
+import {BASE_IMG_URL} from '../../utils/constants'
 import {reqCategory} from '../../api'
 
 const Item = List.Item
@@ -38,7 +38,7 @@ const Item = List.Item
     render(){
 
         //读取携带过来的数据
-        const {productName, description, price, detail} = this.props.location.state.product
+        const {productName, description, price, detail, imgs} = this.props.location.state.product
         const {cName1, cName2} = this.state
 
         const title = (
@@ -56,33 +56,33 @@ const Item = List.Item
                 <List>
                     <Item>
                         <span className="left">商品名称:</span>
-                        <span>{productName}</span>
+                        <span className="right">{productName}</span>
                     </Item>
                     <Item>
                         <span className="left">商品描述:</span>
-                        <span>{description}</span>
+                        <span className="right">{description}</span>
                     </Item>
                     <Item>
                         <span className="left">商品价格:</span>
-                        <span>{price}元</span>
+                        <span className="right">{price}元</span>
                     </Item>
                     <Item>
                         <span className="left">所属分类:</span>
-                        <span >{cName1} --{'>'} {cName2}</span>
+                        <span className="right">{cName1} --{'>'} {cName2}</span>
                     </Item>
                     <Item>
                         <span className="left">商品图片:</span>
                         <span>
-                            <img 
+                        {
+                            imgs.map(img => (
+                            <img
+                                key={img}
+                                src={BASE_IMG_URL + img}
                                 className="product-img"
-                                src={imgs} 
-                                alt="img" 
+                                alt="img"
                             />
-                            <img 
-                                className="product-img"
-                                src={imgs} 
-                                alt="img" 
-                            />
+                            ))
+                        }
                         </span>
                     </Item>
                     <Item>
