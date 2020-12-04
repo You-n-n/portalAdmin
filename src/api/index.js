@@ -57,9 +57,9 @@ export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType}) => a
 // 更新商品的状态
 export const reqUpdateStatus = (id, productStatus,account_name) => ajax(BASE + '/manage/product/updateStatus' , {id, productStatus,account_name}, 'POST')
 //添加商品
-export const reqUploadProduct = (product) => ajax(BASE + '/manage/product/add' , {product}, 'POST')
-//上传图片
-export const reqUploadImage = (image) => ajax(BASE + '/manage/product/uploadImages', { image}, 'POST')
+export const reqUploadAndUpdateProduct = (product,account_name) => ajax(BASE + '/manage/product/addOrUpdate' , {product,account_name}, 'POST')
+//删除图片
+export const reqDeleteImg = (name) => ajax(BASE + '/manage/product/delImg', {name}, 'POST')
 
 
 /**
@@ -78,6 +78,20 @@ export const reqGetOperationByAny = ({pageNum,pageSize,searchName,opType,opMenu}
     opMenu, 
     searchName
 }), 'GET')
+
+/**
+ * user 用户请求
+ */
+export const reqDeleteUser = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
+export const reqUsers = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
+export const reqAddOrUpdateUser = (user,account_name) => ajax(BASE + '/manage/user/addUser' , ({user,account_name}), 'POST')
+
+/**
+ * role 角色请求
+ */
+export const reqRoles = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
+export const reqAddRole = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
+export const reqUpdateRole = () => ajax(BASE + '/manage/user/addUser' , ({}), 'POST')
 
 //获取天气信息
 export const reqWeather = () => {

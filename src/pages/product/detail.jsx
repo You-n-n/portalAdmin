@@ -9,7 +9,7 @@ const Item = List.Item
  * product 的详情页的子路由
  */
 
- export default class ProductDetail extends Component{
+export default class ProductDetail extends Component{
 
     state = {
         cName1:'',//一级分类名称
@@ -93,4 +93,4 @@ const Item = List.Item
             </Card>
         )
     }
- }
+}

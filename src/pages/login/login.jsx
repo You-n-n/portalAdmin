@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {Form, Input, Icon, Button, message} from 'antd'
 import {Redirect} from 'react-router-dom'
-import logo from '../../assets/images/logo.png'
+//import logo from '../../assets/images/logo1.png'
+import logo from '../../assets/images/YiGou.png'
 import './login.less'
 import {reqLogin} from '../../api'
 import memoryUtils from '../../utils/memoryUtils'
@@ -64,8 +65,6 @@ class Login extends Component {
             callback("密码长度不能小于4位")
         } else if (value.length>12){
             callback("密码长度不能超过12位")
-        } else if (!/^[a-zA-Z0-9_]+$/.test(value)){
-            callback("密码格式不正确")
         } else {
             callback()
         }
@@ -111,7 +110,7 @@ class Login extends Component {
         const {getFieldDecorator} = form;
 
         return (<div className='login'>
-                <header className='login-header'><img src={logo} alt="logo"/> <h1>React 项目: 后台管理系统</h1></header>
+                <header className='login-header'><img src={logo} alt="logo"/> <h1>易购商城: 后台管理系统</h1></header>
                 <section className='login-content'><h1>用户登录</h1>
                     <Form onSubmit={this.handleSubmit} className="login-form">
                         <Item>

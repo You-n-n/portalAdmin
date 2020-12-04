@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
-import {Card, Form, message, Input, Cascader, Upload, Icon, Button, Modal }from 'antd'
+import {Card, Form, message, Input, Cascader, Icon, Button }from 'antd'
 import LinkButton from '../../components/link-button'
-import {reqUploadProduct, reqCategorys} from '../../api'
+import {reqUploadAndUpdateProduct, reqCategorys} from '../../api'
 import PicturesWall from './pictures-wall '
 import RichTextEditor from './rich-text-editor'
+import memoryUtils from '../../utils/memoryUtils'
 
 const {Item} = Form 
 const { TextArea} = Input
@@ -27,7 +28,7 @@ const fileList = [
     // },
 ];
 
- class ProductAddUpdate extends Component{
+class ProductAddUpdate extends Component{
 
     state = {
         options: [],
@@ -42,7 +43,7 @@ const fileList = [
         // 创建用来保存ref标识的标签对象的容器
         this.pw = React.createRef()
         this.editor = React.createRef()
-      }
+}
 
     initOptions = async (categorys) => {
         // 根据categorys 生成Options 数据
@@ -121,8 +122,8 @@ const fileList = [
 
         this.setState({
             options: [...this.state.options],
-          });
-      };
+        });
+};
 
     /**上传商品 */
     upload = () =>{
@@ -130,16 +131,18 @@ const fileList = [
             if (!error) {
                 // 1. 收集数据, 并封装成product对象
                 const {productName, description, price, categoryIds} = values
+                const {account_name} = memoryUtils.user;
                 let pCategoryId, categoryId
                 if (categoryIds.length===1) {
-                  pCategoryId = '0'
-                  categoryId = categoryIds[0]
+                    var l = categoryIds[0]
+                    pCategoryId = l.toString()
                 } else {
-                  var i = categoryIds[0]
-                  var j = categoryIds[1]
-                  pCategoryId = i.toString()
-                  categoryId = j.toString()
+                    var i = categoryIds[0]
+                    var j = categoryIds[1]
+                    pCategoryId = i.toString()
+                    categoryId = j.toString()
                 }
+                
                 const imgs = this.pw.current.getImgs()
                 const detail = this.editor.current.getDetail()
         
@@ -147,20 +150,20 @@ const fileList = [
         
                 // 如果是更新, 需要添加_id
                 if(this.isUpdate) {
-                  product.id = this.product.id
+                    product.id = this.product.id
                 }
         
                 // 2. 调用接口请求函数去添加/更新
-                const result = await reqUploadProduct(product)
+                const result = await reqUploadAndUpdateProduct(product,account_name)
         
                 // 3. 根据结果提示
                 if (result.status=== '0') {
-                  message.success(`${this.isUpdate ? '更新' : '添加'}商品成功!`)
-                  this.props.history.goBack()
+                    message.success(`${this.isUpdate ? '更新' : '添加'}商品成功!`)
+                    this.props.history.goBack()
                 } else {
-                  message.error(result.msg)
+                    message.error(result.msg)
                 }
-              }
+                }
         })
         
     }
@@ -188,7 +191,7 @@ const fileList = [
         this.isUpdate = !!product
         this.product = product || {}
     }
-     render(){
+    render(){
 
         const {isUpdate, product} = this
         const {pCategoryId, categoryId, imgs, detail} = product
@@ -211,27 +214,27 @@ const fileList = [
 
         //指定Item布局的配置对象
         const formItemLayout = {
-            labelCol: { span: 2},
-            wrapperCol: { span: 6},
+            labelCol: { span: 6},
+            wrapperCol: { span: 10},
         }
 
-         const title = (
-             <span>
-                 <LinkButton>
-                 <Icon type='arrow-left' style={{fontSize: 20}} onClick={() => this.props.history.goBack()}/>
-                 </LinkButton>
-                 <span>
-                     {isUpdate ? '修改商品' : '添加商品'}
-                 </span>
-             </span>
-         )
+        const title = (
+            <span>
+                <LinkButton>
+                <Icon type='arrow-left' style={{fontSize: 20}} onClick={() => this.props.history.goBack()}/>
+                </LinkButton>
+                <span>
+                    {isUpdate ? '修改商品' : '添加商品'}
+                </span>
+            </span>
+        )
 
-         const {getFieldDecorator} = this.props.form 
+const {getFieldDecorator} = this.props.form 
 
-         return(
-             <Card title={title} >
-                 <Form {...formItemLayout}>
-                     <Item label="商品名称">
+        return(
+            <Card title={title} >
+                <Form {...formItemLayout}>
+                    <Item label="商品名称">
                         {
                             getFieldDecorator('productName', {
                                 initialValue: product.productName,
@@ -240,9 +243,9 @@ const fileList = [
                                 ]
                             })(<Input placeholder='请输入商品名称' />)
                         }
-                     </Item>
+                    </Item>
 
-                     <Item label="商品描述">
+                    <Item label="商品描述">
                         {
                             getFieldDecorator('description', {
                                 initialValue: product.description,
@@ -251,9 +254,9 @@ const fileList = [
                                 ]
                             })(<TextArea placeholder="请输入商品描述" autoSize={{minRows: 2,maxRows: 5}} />)
                         }
-                     </Item>
+                    </Item>
 
-                     <Item label="商品价格">
+                    <Item label="商品价格">
                         {
                             getFieldDecorator('price', {
                                 initialValue: product.price,
@@ -263,11 +266,11 @@ const fileList = [
                                 ]
                             })(<Input type='number' placeholder='请输入商品价格' addonAfter="元" />)
                         }
-                     </Item>
+                    </Item>
 
-                     <Item label="商品分类">
-                         {
-                             getFieldDecorator('categoryIds', {
+                    <Item label="商品分类">
+                        {
+                            getFieldDecorator('categoryIds', {
                                 initialValue: categoryIds,
                                 rules: [
                                     {required: true, message: '请选择商品分类'}
@@ -277,25 +280,25 @@ const fileList = [
                                 loadData = {this.loadData} /**记载的下级列表 */
                                 placeholder='请选择商品分类'
                                 />)
-                         }
+                        }
                         
-                     </Item>
+                    </Item>
 
-                     <Item label="商品图片">
-                         <PicturesWall ref={this.pw} imgs={imgs}/>
-                     </Item>
+                    <Item label="商品图片">
+                        <PicturesWall ref={this.pw} imgs={imgs}/>
+                    </Item>
 
-                     <Item label="商品详情">
+                    <Item label="商品详情">
                         <RichTextEditor ref={this.editor} detail={detail}/>
-                     </Item>
+                    </Item>
 
-                     <Item>
-                        <Button type='primary' onClick={this.upload}>提交</Button>
-                     </Item>
-                 </Form>
-             </Card>
-         )
-     }
- }
+                    <Item>
+                        <Button type='primary' style={{float:'right'}} onClick={this.upload}>提交</Button>
+                    </Item>
+                </Form>
+            </Card>
+        )
+    }
+}
 
- export default Form.create()(ProductAddUpdate)
+export default Form.create()(ProductAddUpdate)

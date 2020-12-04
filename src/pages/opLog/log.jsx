@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
-import { Table, Button, message, Card ,Select, Input,} from 'antd';
+import { Table, Button, message, Card ,Select, Input,Modal} from 'antd';
 import LinkButton from '../../components/link-button'
 import {reqGetOperations, reqGetOperationByAny} from '../../api/';
 import {OPER_PAGE_SIZE} from '../../utils/constants'
+import LogDetail from './logDetail'
+import LogDetailTwo from './logDetailTwo'
 /**
  * 用户路由
  */
@@ -18,7 +20,10 @@ export default class Log extends Component{
       searchName:'', //搜索的关键字
       opType:'', //操作类型
       opMenu:'', // 操作菜单
-      searchName: ''
+      searchName: '',
+      flag: false,
+      flagTwo: false,
+      operLogDetail:[]
     }
 
     //初始化table 的列的数组
@@ -45,18 +50,22 @@ export default class Log extends Component{
           key: 'logCntt',
         },
         {
-          title: '修改前数据',
-          dataIndex: 'beforeCntt',
-          key: 'beforeCntt',
-        },{
-          title: '修改后数据',
-          dataIndex: 'afterCntt',
-          key: 'afterCntt',
-        },{
           title: '操作时间',
           dataIndex: 'opTime',
           key: 'opTime',
         },
+        {
+          width: 100,
+                title: '操作',
+                render: (operation) => {
+                    return (
+                        <span>
+                            {/**将state传递给目标组件 */}
+                            <LinkButton onClick={() => this.operLogDetail(operation)}>详情</LinkButton>
+                        </span>
+                    )
+                }
+        }
         // {
         //   title: 'Action',
         //   key: 'action',
@@ -76,6 +85,31 @@ export default class Log extends Component{
 //发送异步ajax请求
 componentDidMount () {
   this.getOperations(1)
+}
+
+//点击打开详情弹窗
+operLogDetail = (operation) => {
+  const opType = operation.opType
+  if(opType === '修改'){
+    this.setState({
+      flagTwo: true,
+      operLogDetail: operation
+    })
+  }else{
+    this.setState({
+      flag: true,
+      operLogDetail: operation
+    })
+  }
+  
+}
+
+//关闭弹窗
+logDetailCancel = () =>{
+  this.setState({
+    flag: false,
+    flagTwo: false
+  })
 }
 
   getOperations = async (pageNum) => {
@@ -179,6 +213,24 @@ componentDidMount () {
                   loading={loading}
                   />
                 </Card>
+                <Modal
+                      title="日志详情"
+                      visible={this.state.flag}
+                      onOk={this.logDetailCancel}
+                      onCancel={this.logDetailCancel}
+                      >
+                        <LogDetail 
+                            operLogDetail={this.state.operLogDetail} />
+                </Modal>
+                <Modal
+                      title="日志详情"
+                      visible={this.state.flagTwo}
+                      onOk={this.logDetailCancel}
+                      onCancel={this.logDetailCancel}
+                      >
+                        <LogDetailTwo 
+                            operLogDetail={this.state.operLogDetail}/>
+                </Modal>
             </div>
           </div>
         )
