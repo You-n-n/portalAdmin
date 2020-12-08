@@ -13,6 +13,9 @@ import Log from '../opLog/log'
 import Bar from '../charts/bar'
 import Line from '../charts/line'
 import Pie from '../charts/pie'
+import OrderForm from '../order/orderForm'
+import ReturnForm from '../order/returnForm'
+import Customer from '../customer/customer'
 
 const { Footer, Sider, Content } = Layout;
 
@@ -43,6 +46,9 @@ export default class Admin extends Component {
                             <Route path='/product' component={Product} />
                             <Route path='/role' component={Role} />
                             <Route path='/user' component={User} />
+                            <Route path='/customer' component={Customer} />
+                            <Route path='/order/orderForm' component={OrderForm} /> 
+                            <Route path='/order/returnForm' component={ReturnForm} />
                             <Route path='/log' component={Log} />
                             <Route path='/charts/bar' component={Bar} />
                             <Route path='/charts/line' component={Line} />

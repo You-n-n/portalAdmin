@@ -90,7 +90,7 @@ class LeftNav extends Component{
 
     //在第一次render()之前执行一次
     //为第一次render()渲染准备数据
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
         this.menuNodes = this.getMenuNodes(menuList)
     }
 

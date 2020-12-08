@@ -16,7 +16,7 @@ class AddForm extends Component {
     setForm: PropTypes.func.isRequired, // 用来传递form对象的函数
   }
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.props.setForm(this.props.form)
   }
 

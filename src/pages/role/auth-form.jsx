@@ -54,7 +54,7 @@ export default class AuthForm extends PureComponent {
   };
 
 
-  componentWillMount () {
+  UNSAFE_componentWillMount () {
     this.treeNodes = this.getTreeNodes(menuList)
   }
 

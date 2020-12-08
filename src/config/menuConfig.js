@@ -22,6 +22,28 @@ const menuList = [
         ]
     },
     {
+        title: '订单管理',
+        key: '/order',
+        icon: 'snippets',
+        children: [
+            {
+                title: '订货单',
+                key: '/order/orderForm',
+                icon: 'plus-square'
+            },
+            {
+                title: '退货单',
+                key: '/order/returnForm',
+                icon: 'minus-square'
+            }
+        ]
+    },
+    {
+        title: '客户管理',
+        key: '/customer',
+        icon: 'team'
+    },
+    {
         title: '用户管理',
         key: '/user',
         icon: 'user'

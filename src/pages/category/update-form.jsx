@@ -13,7 +13,7 @@ class UpdateForm extends Component {
         setForm : propTypes.func.isRequired
     }
 
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
         //准备将form对象通过setform()方法传递给父组件
         this.props.setForm(this.props.form)
     }

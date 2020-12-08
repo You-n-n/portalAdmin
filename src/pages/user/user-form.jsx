@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 import {
   Form,
   Select,
-  Input
+  Input,
+  message
 } from 'antd'
+import {reqToGetAcctId} from '../../api/index'
 
 const Item = Form.Item
 const Option = Select.Option
@@ -20,7 +22,24 @@ class UserForm extends PureComponent {
     user: PropTypes.object
   }
 
-  componentWillMount () {
+  getAcctId = () => {
+    this.props.form.validateFields( async (error,values) => {
+      if(!error){
+        const{accountName} = values
+        const result = await reqToGetAcctId(accountName)
+        if(result.status === '0'){
+          const username1 = result.data
+          this.props.form.setFieldsValue({
+            'username':username1
+          })
+        }else{
+          message.error(result.msg)
+        }
+      }
+    })
+  }
+
+  UNSAFE_componentWillMount () {
     this.props.setForm(this.props.form)
   }
 
@@ -36,12 +55,27 @@ class UserForm extends PureComponent {
 
     return (
       <Form {...formItemLayout}>
-        <Item label='用户名'>
+        <Item label='姓名'>
           {
             getFieldDecorator('accountName', {
               initialValue: user.accountName,
             })(
               <Input placeholder='请输入用户名'/>
+            )
+          }
+        </Item>
+
+        <Item label='主账号'>
+          {
+            getFieldDecorator('username', {
+              initialValue: user.username,
+            })(
+              <Input placeholder='系统生成主账号'
+                type="text"
+                autoComplete="off"
+                readOnly={true}
+                onFocus={this.getAcctId}
+             />
             )
           }
         </Item>

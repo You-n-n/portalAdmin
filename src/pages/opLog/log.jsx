@@ -23,7 +23,8 @@ export default class Log extends Component{
       searchName: '',
       flag: false,
       flagTwo: false,
-      operLogDetail:[]
+      operLogDetail:[],
+      showName:new Map()
     }
 
     //初始化table 的列的数组
@@ -78,13 +79,29 @@ export default class Log extends Component{
         ];
 }
 
-  componentWillMount (){
+UNSAFE_componentWillMount (){
     this.initColumns()
 }
 
 //发送异步ajax请求
 componentDidMount () {
   this.getOperations(1)
+
+  const showName = new Map();
+  showName.set("acctId","姓名");
+  showName.set("accountName","姓名");
+  showName.set("telPhone","手机号码");
+  showName.set("addTime","添加时间");
+  showName.set("prsnIdNum","身份证号")
+
+  showName.set("price","商品价格");
+  showName.set("description","商品描述");
+  showName.set("categoryName","商品所属分类");
+  showName.set("categoryId","商品所属分类Id");
+  showName.set("productName","商品名称");
+  this.setState({
+    showName:showName
+  })
 }
 
 //点击打开详情弹窗
@@ -216,20 +233,25 @@ logDetailCancel = () =>{
                 <Modal
                       title="日志详情"
                       visible={this.state.flag}
-                      onOk={this.logDetailCancel}
                       onCancel={this.logDetailCancel}
+                      footer={null}
+                      destroyOnClose={true}
                       >
                         <LogDetail 
-                            operLogDetail={this.state.operLogDetail} />
+                            operLogDetail={this.state.operLogDetail}
+                            showName = {this.state.showName}
+                            />
                 </Modal>
                 <Modal
                       title="日志详情"
                       visible={this.state.flagTwo}
-                      onOk={this.logDetailCancel}
                       onCancel={this.logDetailCancel}
+                      footer={null}
                       >
                         <LogDetailTwo 
-                            operLogDetail={this.state.operLogDetail}/>
+                            operLogDetail={this.state.operLogDetail}
+                            showName = {this.state.showName}
+                            />
                 </Modal>
             </div>
           </div>

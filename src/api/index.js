@@ -85,6 +85,7 @@ export const reqGetOperationByAny = ({pageNum,pageSize,searchName,opType,opMenu}
 export const reqDeleteUser = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
 export const reqUsers = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
 export const reqAddOrUpdateUser = (user,account_name) => ajax(BASE + '/manage/user/addUser' , ({user,account_name}), 'POST')
+export const reqToGetAcctId = (accountName) => ajax(BASE + '/manage/user/toGetAcctId', ({accountName}), 'POST')
 
 /**
  * role 角色请求
