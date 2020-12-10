@@ -13,6 +13,10 @@ const Item = Form.Item;
 /* 登 陆 路 由 组 件 */
 class Login extends Component {
 
+    componentDidMount () {
+        this.getCode()
+    }
+
     handleSubmit = (event) => {
         //阻止事件的默认行为
         event.preventDefault();

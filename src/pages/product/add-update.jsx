@@ -82,6 +82,7 @@ class ProductAddUpdate extends Component{
      * 获取一级/二级分类列表
      */
     getCategorys = async (parentId) =>{
+        debugger
         const result = await reqCategorys(parentId)
         if(result.status === '0'){
             const categorys = result.data
@@ -131,7 +132,7 @@ class ProductAddUpdate extends Component{
             if (!error) {
                 // 1. 收集数据, 并封装成product对象
                 const {productName, description, price, categoryIds} = values
-                const {account_name} = memoryUtils.user;
+                const {username} = memoryUtils.user;
                 let pCategoryId, categoryId
                 if (categoryIds.length===1) {
                     var l = categoryIds[0]
@@ -154,7 +155,7 @@ class ProductAddUpdate extends Component{
                 }
         
                 // 2. 调用接口请求函数去添加/更新
-                const result = await reqUploadAndUpdateProduct(product,account_name)
+                const result = await reqUploadAndUpdateProduct(product,username)
         
                 // 3. 根据结果提示
                 if (result.status=== '0') {

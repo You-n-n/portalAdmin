@@ -6,7 +6,7 @@ import {
   Input,
   message
 } from 'antd'
-import {reqToGetAcctId} from '../../api/index'
+import {reqToGetAcctId,reqCheckPhone} from '../../api/index'
 
 const Item = Form.Item
 const Option = Select.Option
@@ -19,7 +19,15 @@ class UserForm extends PureComponent {
   static propTypes = {
     setForm: PropTypes.func.isRequired, // 用来传递form对象的函数
     roles: PropTypes.array.isRequired,
-    user: PropTypes.object
+    user: PropTypes.object,
+  }
+
+  state = {
+    accountNameState:'',
+    phoneState:'',
+    usernameState:'',
+    mailState: '',
+    prsnIdNumState:''
   }
 
   getAcctId = () => {
@@ -32,8 +40,48 @@ class UserForm extends PureComponent {
           this.props.form.setFieldsValue({
             'username':username1
           })
+          this.setState({usernameState:'success'})
         }else{
           message.error(result.msg)
+          this.setState({usernameState:'error'})
+        }
+      }
+    })
+  }
+
+  checkPhone = () => {
+    this.props.form.validateFields( async (error,values) => {
+      if(!error){
+        const{telPhone} = values
+        const result = await reqCheckPhone(telPhone)
+        if(result.status != '0'){
+          message.error(result.msg)
+          this.setState({phoneState:'error'})
+        }else{
+          this.setState({phoneState:'success'})
+        }
+      }
+    })
+  }
+
+  onBlurs = () => {
+    this.props.form.validateFields( async (error,values) => {
+      if(!error){
+        const{accountName,mail,prsnIdNum} = values
+        if(accountName != null && accountName != ''){
+          this.setState({accountNameState:'success'})
+        }else{
+          this.setState({accountNameState:''})
+        }
+        if(mail != null && mail != ''){
+          this.setState({mailState:'success'})
+        }else{
+          this.setState({mailState:''})
+        }
+        if(prsnIdNum != null && prsnIdNum != ''){
+          this.setState({prsnIdNumState:'success'})
+        }else{
+          this.setState({prsnIdNumState:''})
         }
       }
     })
@@ -47,6 +95,7 @@ class UserForm extends PureComponent {
 
     const {roles, user} = this.props
     const { getFieldDecorator } = this.props.form
+    const {accountNameState,usernameState,phoneState,mailState,prsnIdNumState} = this.state
     // 指定Item布局的配置对象
     const formItemLayout = {
       labelCol: { span: 4 },  // 左侧label的宽度
@@ -55,17 +104,25 @@ class UserForm extends PureComponent {
 
     return (
       <Form {...formItemLayout}>
-        <Item label='姓名'>
+        <Item label='姓名'
+          hasFeedback
+          validateStatus={accountNameState}
+        >
           {
             getFieldDecorator('accountName', {
               initialValue: user.accountName,
             })(
-              <Input placeholder='请输入用户名'/>
+              <Input placeholder='请输入用户名'
+                onBlur={this.onBlurs}
+              />
             )
           }
         </Item>
 
-        <Item label='主账号'>
+        <Item label='主账号'
+          hasFeedback
+          validateStatus={usernameState}
+        >
           {
             getFieldDecorator('username', {
               initialValue: user.username,
@@ -80,35 +137,49 @@ class UserForm extends PureComponent {
           }
         </Item>
 
-        <Item label='手机号'>
+        <Item label='手机号'
+          hasFeedback
+          validateStatus={phoneState}>
           {
             getFieldDecorator('telPhone', {
               initialValue: user.telPhone,
             })(
-              <Input placeholder='请输入手机号'/>
+              <Input placeholder='请输入手机号'
+                onBlur = {this.checkPhone}
+              />
             )
           }
         </Item>
-        <Item label='邮箱'>
+        <Item label='邮箱'
+          hasFeedback
+          validateStatus={mailState}
+        >
           {
             getFieldDecorator('mail', {
               initialValue: user.mail,
             })(
-              <Input placeholder='请输入邮箱'/>
+              <Input placeholder='请输入邮箱'
+                onBlur={this.onBlurs}
+              />
             )
           }
         </Item>
-        <Item label='身份证号'>
+        <Item label='身份证号'
+          hasFeedback
+          validateStatus={prsnIdNumState}
+        >
           {
             getFieldDecorator('prsnIdNum', {
               initialValue: user.prsnIdNum,
             })(
-              <Input placeholder='请输入身份证号'/>
+              <Input placeholder='请输入身份证号'
+                onBlur={this.onBlurs}
+              />
             )
           }
         </Item>
 
-        <Item label='角色'>
+        {/* <Item label='角色'>
           {
             getFieldDecorator('role_id', {
               initialValue: user.role_id,
@@ -120,7 +191,7 @@ class UserForm extends PureComponent {
               </Select>
             )
           }
-        </Item>
+        </Item> */}
       </Form>
     )
   }

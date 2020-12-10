@@ -30,11 +30,11 @@ export const reqLogin = (username, password,verification) => ajax(BASE + '/porta
 //获取 一级/二级列表
 export const reqCategorys = (parentId) => ajax(BASE + '/manage/category/all' , {parentId})
 //添加分类
-export const reqAddCategorys = (categoryName,parentId,account_name) => ajax(BASE + '/manage/category/add' , {categoryName,parentId,account_name}, 'POST')
+export const reqAddCategorys = (categoryName,parentId,username) => ajax(BASE + '/manage/category/add' , {categoryName,parentId,username}, 'POST')
 //更新分类
-export const reqUpdateCategorys = (categoryName,id,account_name) => ajax(BASE + '/manage/category/update' , {categoryName,id,account_name}, 'POST')
+export const reqUpdateCategorys = (categoryName,id,username) => ajax(BASE + '/manage/category/update' , {categoryName,id,username}, 'POST')
 //删除分类
-export const reqDelCategorys = (id,account_name) => ajax(BASE + '/manage/category/del' , {id,account_name}, 'POST')
+export const reqDelCategorys = (id,username) => ajax(BASE + '/manage/category/del' , {id,username}, 'POST')
 //获取一个分类
 export const reqCategory = (categoryId) => ajax(BASE + '/manage/category/info', {categoryId}, 'GET')
 
@@ -55,12 +55,13 @@ export const reqSearchProducts = ({pageNum,pageSize,searchName,searchType}) => a
     },
      'GET')
 // 更新商品的状态
-export const reqUpdateStatus = (id, productStatus,account_name) => ajax(BASE + '/manage/product/updateStatus' , {id, productStatus,account_name}, 'POST')
+export const reqUpdateStatus = (id, productStatus,username) => ajax(BASE + '/manage/product/updateStatus' , {id, productStatus,username}, 'POST')
 //添加商品
-export const reqUploadAndUpdateProduct = (product,account_name) => ajax(BASE + '/manage/product/addOrUpdate' , {product,account_name}, 'POST')
+export const reqUploadAndUpdateProduct = (product,username) => ajax(BASE + '/manage/product/addOrUpdate' , {product,username}, 'POST')
 //删除图片
 export const reqDeleteImg = (name) => ajax(BASE + '/manage/product/delImg', {name}, 'POST')
-
+//根据分类Id获取该分类下的所有商品
+export const reqGetProductById = (pageNum,pageSize,id) => ajax(BASE + 'manage/product/getProductById', {pageNum,pageSize,id},'GET')
 
 /**
  * 其他请求
@@ -83,9 +84,10 @@ export const reqGetOperationByAny = ({pageNum,pageSize,searchName,opType,opMenu}
  * user 用户请求
  */
 export const reqDeleteUser = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
-export const reqUsers = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
-export const reqAddOrUpdateUser = (user,account_name) => ajax(BASE + '/manage/user/addUser' , ({user,account_name}), 'POST')
+export const reqUsers = () => ajax(BASE + '/manage/user/userInfo' , ({}), 'GET')
+export const reqAddOrUpdateUser = (user,username) => ajax(BASE + '/manage/user/addUser' , ({user,username}), 'POST')
 export const reqToGetAcctId = (accountName) => ajax(BASE + '/manage/user/toGetAcctId', ({accountName}), 'POST')
+export const reqCheckPhone = (telPhone) => ajax(BASE + '/manage/user/checkPhone',({telPhone}),'POST')
 
 /**
  * role 角色请求

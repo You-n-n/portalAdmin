@@ -26,28 +26,37 @@ export default class User extends Component {
   initColumns = () => {
     this.columns = [
       {
+        title: '姓名',
+        dataIndex: 'accountName',
+        key: 'accountName'
+      },
+      {
         title: '用户名',
-        dataIndex: 'username'
+        dataIndex: 'username',
+        key: 'username'
       },
       {
         title: '邮箱',
-        dataIndex: 'email'
+        dataIndex: 'mail',
+        key: 'mail'
       },
 
       {
         title: '电话',
-        dataIndex: 'phone'
+        dataIndex: 'telphone',
+        key: 'telphone'
       },
       {
         title: '注册时间',
-        dataIndex: 'create_time',
+        dataIndex: 'addTime',
+        key: 'addTime',
         render: formateDate
       },
-      {
-        title: '所属角色',
-        dataIndex: 'role_id',
-        render: (role_id) => this.roleNames[role_id]
-      },
+      // {
+      //   title: '所属角色',
+      //   dataIndex: 'role_id',
+      //   render: (role_id) => this.roleNames[role_id]
+      // },
       {
         title: '操作',
         render: (user) => (
@@ -111,11 +120,11 @@ export default class User extends Component {
    */
   addOrUpdateUser = async () => {
 
-    this.setState({isShow: false})
-    const {account_name} = memoryUtils.user;
+    const {username} = memoryUtils.user;
 
     // 1. 收集输入数据
     const user = this.form.getFieldsValue()
+    const er = this.form.getFieldsError()
     this.form.resetFields()
     // 如果是更新, 需要给user指定_id属性
     if (this.user) {
@@ -123,9 +132,10 @@ export default class User extends Component {
     }
 
     // 2. 提交添加的请求
-    const result = await reqAddOrUpdateUser(user,account_name)
+    const result = await reqAddOrUpdateUser(user,username)
     // 3. 更新列表显示
     if(result.status=== '0') {
+      this.setState({isShow: false})
       message.success(`${this.user ? '修改' : '添加'}用户成功`)
       this.getUsers()
     }else{
@@ -135,9 +145,9 @@ export default class User extends Component {
 
   getUsers = async () => {
     const result = await reqUsers()
-    if (result.status===0) {
+    if (result.status==='0') {
       const {users, roles} = result.data
-      this.initRoleNames(roles)
+      //this.initRoleNames(roles)
       this.setState({
         users,
         roles
@@ -161,20 +171,34 @@ export default class User extends Component {
 
     const title = <Button type='primary' onClick={this.showAdd}>创建用户</Button>
 
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        //console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      },
+      onSelect: (record, selected, selectedRows) => {
+        //console.log(record, selected, selectedRows);
+      },
+      onSelectAll: (selected, selectedRows, changeRows) => {
+        //console.log(selected, selectedRows, changeRows);
+      },
+    };
+
     return (
       <Card title={title}>
         <Table
+          rowSelection={rowSelection}
           bordered
-          rowKey='_id'
+          rowKey='id'
           dataSource={users}
           columns={this.columns}
-          pagination={{defaultPageSize: 2}}
+          pagination={{defaultPageSize: 8}}
         />
 
         <Modal
-          title={user._id ? '修改用户' : '添加用户'}
+          title={user.id ? '修改用户' : '添加用户'}
           visible={isShow}
           onOk={this.addOrUpdateUser}
+          destroyOnClose={true}
           onCancel={() => {
             this.form.resetFields()
             this.setState({isShow: false})

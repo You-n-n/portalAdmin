@@ -136,11 +136,11 @@ export default class Category extends Component{
                 const parentId = this.form.getFieldValue('parentId').toString()
                 const parentId1 = this.form.getFieldValue('parentId')
                 const {categoryName} = values
-                const {account_name} = memoryUtils.user;
+                const {username} = memoryUtils.user;
                 // 清除输入数据
                 this.form.resetFields()
         
-                const result = await reqAddCategorys(categoryName, parentId,account_name)
+                const result = await reqAddCategorys(categoryName, parentId,username)
                 //console.log('result',result)
                 if(result.status ==='0'){
                     message.success(result.msg)
@@ -176,12 +176,12 @@ export default class Category extends Component{
                 //准备数据
                 const id = this.category.id
                 const {categoryName} = values
-                const {account_name} = memoryUtils.user;
+                const {username} = memoryUtils.user;
                 //清楚输入数据
                 this.form.resetFields()
         
                 //2. 发送请求更新分类
-                const result = await reqUpdateCategorys(categoryName,id,account_name)
+                const result = await reqUpdateCategorys(categoryName,id,username)
                 //console.log('result',result)
                 //console.log('object',result.PromiseValue)
                 if (result.status ==='0'){
@@ -199,8 +199,8 @@ export default class Category extends Component{
     delCategory= async (category) => {
         //debugger
         const id = category.id
-        const {account_name} = memoryUtils.user;
-        const result = await reqDelCategorys(id,account_name)
+        const {username} = memoryUtils.user;
+        const result = await reqDelCategorys(id,username)
         //console.log(result.status)
         if(result.status === '0'){
             message.success(result.msg)

@@ -17,22 +17,32 @@ export default class LogDetail extends Component{
         {
           title: '要素名称',
           dataIndex: 'key',
-          key: 'key',
+          width:225,
+          ellipsis:true,
         },
         {
           title: '要素值',
           dataIndex: 'value',
-          key: 'value',
+          width:225,
+          ellipsis:true,
         },
       ]
   }
 
   componentDidMount (){
+    debugger
     const {operLogDetail} = this.props
     const {afterCntt} = operLogDetail
+    const {beforeCntt} = operLogDetail
+    let cntt = ''
+    if(null != afterCntt){
+      cntt = afterCntt
+    }else{
+      cntt = beforeCntt
+    }
     try{
       const showName = this.props.showName
-      const cntts = JSON.parse(afterCntt)
+      const cntts = JSON.parse(cntt)
       let listData = [];
       Object.keys(cntts).forEach(key => {
         let jsonObj = {"key":"","value":""};
