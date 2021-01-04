@@ -149,7 +149,7 @@ class ProductAddUpdate extends Component{
         
                 const product = {productName, description, price, imgs, detail, pCategoryId, categoryId}
         
-                // 如果是更新, 需要添加_id
+                // 如果是更新, 需要添加id
                 if(this.isUpdate) {
                     product.id = this.product.id
                 }

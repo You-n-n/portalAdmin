@@ -54,11 +54,15 @@ class UserForm extends PureComponent {
       if(!error){
         const{telPhone} = values
         const result = await reqCheckPhone(telPhone)
-        if(result.status != '0'){
-          message.error(result.msg)
-          this.setState({phoneState:'error'})
+        if(null != telPhone && '' != telPhone){
+          if(result.status != '0'){
+            message.error(result.msg)
+            this.setState({phoneState:'error'})
+          }else{
+            this.setState({phoneState:'success'})
+          }
         }else{
-          this.setState({phoneState:'success'})
+          this.setState({mailState:''})
         }
       }
     })
@@ -68,17 +72,17 @@ class UserForm extends PureComponent {
     this.props.form.validateFields( async (error,values) => {
       if(!error){
         const{accountName,mail,prsnIdNum} = values
-        if(accountName != null && accountName != ''){
+        if(null != accountName && '' != accountName){
           this.setState({accountNameState:'success'})
         }else{
           this.setState({accountNameState:''})
         }
-        if(mail != null && mail != ''){
+        if(null != mail && '' != mail){
           this.setState({mailState:'success'})
         }else{
           this.setState({mailState:''})
         }
-        if(prsnIdNum != null && prsnIdNum != ''){
+        if(null != prsnIdNum && '' != prsnIdNum){
           this.setState({prsnIdNumState:'success'})
         }else{
           this.setState({prsnIdNumState:''})
@@ -181,12 +185,12 @@ class UserForm extends PureComponent {
 
         {/* <Item label='角色'>
           {
-            getFieldDecorator('role_id', {
-              initialValue: user.role_id,
+            getFieldDecorator('roleid', {
+              initialValue: user.roleid,
             })(
               <Select>
                 {
-                  roles.map(role => <Option key={role._id} value={role._id}>{role.name}</Option>)
+                  roles.map(role => <Option key={role.id} value={role.id}>{role.name}</Option>)
                 }
               </Select>
             )

@@ -49,16 +49,32 @@ const menuList = [
         icon: 'user'
     },
     {
-        title: '角色管理',
+        title: '角色权限',
         key: '/role',
-        icon: 'safety',
+        icon: 'robot',
+        children: [
+            {
+                title: '角色管理',
+                key: '/role/role',
+                icon: 'safety',
+            },
+            {
+                title: '权限管理',
+                key: '/role/auth',
+                icon: 'security-scan',
+            }
+        ]
     },
     {
         title: '操作日志',
         key: '/log',
         icon: 'solution',
     },
-
+    {
+        title: '定时任务',
+        key: '/task',
+        icon: 'sync',
+    },
     {
         title: '图形图表',
         key: '/charts',

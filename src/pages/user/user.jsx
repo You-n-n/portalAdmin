@@ -54,8 +54,8 @@ export default class User extends Component {
       },
       // {
       //   title: '所属角色',
-      //   dataIndex: 'role_id',
-      //   render: (role_id) => this.roleNames[role_id]
+      //   dataIndex: 'roleid',
+      //   render: (roleid) => this.roleNames[roleid]
       // },
       {
         title: '操作',
@@ -74,7 +74,7 @@ export default class User extends Component {
    */
   initRoleNames = (roles) => {
     const roleNames = roles.reduce((pre, role) => {
-      pre[role._id] = role.name
+      pre[role.id] = role.name
       return pre
     }, {})
     // 保存
@@ -106,7 +106,7 @@ export default class User extends Component {
     Modal.confirm({
       title: `确认删除${user.username}吗?`,
       onOk: async () => {
-        const result = await reqDeleteUser(user._id)
+        const result = await reqDeleteUser(user.id)
         if(result.status===0) {
           message.success('删除用户成功!')
           this.getUsers()
@@ -126,9 +126,9 @@ export default class User extends Component {
     const user = this.form.getFieldsValue()
     const er = this.form.getFieldsError()
     this.form.resetFields()
-    // 如果是更新, 需要给user指定_id属性
+    // 如果是更新, 需要给user指定id属性
     if (this.user) {
-      user._id = this.user._id
+      user.id = this.user.id
     }
 
     // 2. 提交添加的请求

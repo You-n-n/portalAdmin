@@ -123,7 +123,7 @@ class Login extends Component {
                                 rules: [
                                     {required: true, message: '必须输入用户名'},
                                     {min: 4, message: '用户名至少4位'},
-                                    {max: 12, message: '用户名至多12位'},
+                                    {max: 18, message: '用户名至多12位'},
                                     {pattern: /^[a-zA-Z0-9_]+$/, message: '用户名格式错误'},
                                 ],
                             })(

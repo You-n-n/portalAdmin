@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
-import {Modal} from 'antd'
-
+import {Modal, Tabs, Button} from 'antd'
 import {reqWeather} from '../../api'
 import menuList from '../../config/menuConfig'
 import {formateDate} from '../../utils/dateUtils'
@@ -9,16 +8,18 @@ import memoryUtils from '../../utils/memoryUtils'
 import storageUtils from '../../utils/storageUtils'
 import './index.less'
 import LinkButton from "../link-button";
+import {Link} from 'react-router-dom';
 
-/**
- * 左侧导航的组件
- */
+const { TabPane } = Tabs;
 class Header extends Component {
 
     state = {
         currentTime: formateDate(Date.now(),'yyyy-MM-dd hh:mm:ss'), //当前时间字符串
         wea: '', 
         city: '',
+        mypanes: [],
+        activeKey: '',
+        panes:[],
     };
 
     getTime = () => {
@@ -58,6 +59,29 @@ class Header extends Component {
         return title;
     };
 
+    add = () => {
+        const title = this.getTitle()
+        
+        const activeKey = this.props.location.pathname;
+        console.log(activeKey)
+        const { panes } = this.state;
+        panes.push({ title: title, content: '', key: activeKey });
+        this.setState({ panes, activeKey });
+      };
+
+    constructor(props) {
+        super(props);
+        this.newTabIndex = 0;
+        const title = this.getTitle();
+        const panes = [
+          { title: title, content: '', key: title },
+        ];
+        this.state = {
+          activeKey: panes[0].key,
+          panes,
+        };
+      }
+
     /**
      * 退出登录
      */
@@ -93,6 +117,33 @@ class Header extends Component {
         //清除定时器
         clearInterval(this.intervalId);
     }
+    
+      onChange = activeKey => {
+        this.setState({ activeKey });
+      };
+    
+      onEdit = (targetKey, action) => {
+        this[action](targetKey);
+      };
+    
+      remove = targetKey => {
+        let { activeKey } = this.state;
+        let lastIndex;
+        this.state.panes.forEach((pane, i) => {
+          if (pane.key === targetKey) {
+            lastIndex = i - 1;
+          }
+        });
+        const panes = this.state.panes.filter(pane => pane.key !== targetKey);
+        if (panes.length && activeKey === targetKey) {
+          if (lastIndex >= 0) {
+            activeKey = panes[lastIndex].key;
+          } else {
+            activeKey = panes[0].key;
+          }
+        }
+        this.setState({ panes, activeKey });
+      };
 
     render() {
 
@@ -107,6 +158,24 @@ class Header extends Component {
                     <LinkButton onClick={this.logout}>退出</LinkButton>
                 </div>
                 <div className='header-bottom'>
+                {/* <div>
+                        <div style={{ marginBottom: 16 }}>
+                        <Button onClick={this.add}>ADD</Button>
+                        </div>
+                    <Tabs
+                    hideAdd
+                    onChange={this.onChange}
+                    activeKey={this.state.activeKey}
+                    type="editable-card"
+                    onEdit={this.onEdit}
+                    >
+                    {this.state.panes.map(pane => (
+                        // this.props.history.replace('/login')
+                        <TabPane tab={<Link to={pane.key}>{pane.title}</Link>} key={pane.key}>
+                        </TabPane>
+                    ))}
+                    </Tabs>
+                </div> */}
                     <div className='header-bottom-left'>{title}</div>
                     <div className='header-bottom-right'>
                         <span>{currentTime}</span>
@@ -120,3 +189,23 @@ class Header extends Component {
 }
 
 export default withRouter(Header);
+
+/**
+ * //修改tab选中的颜色
+setActiveColor = ()=>{
+    let otherTab = document.getElementsByClassName('ant-tabs-tab');//包含了当前的active
+    for (let j in otherTab){
+        if (otherTab.hasOwnProperty(j)){
+            let i = otherTab[j]
+            if (i.className.includes('ant-tabs-tab-active')){//当前点击的
+                i.style.backgroundColor = '#E03D3E';
+                i.style.color = '#fff'
+            }
+             else {//其他默认的样式
+                i.style.backgroundColor = '#fafafa';
+                i.style.color = 'rgba(0, 0, 0, 0.65)'
+            }
+        }
+    }
+}
+ */

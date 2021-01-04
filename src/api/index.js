@@ -83,7 +83,7 @@ export const reqGetOperationByAny = ({pageNum,pageSize,searchName,opType,opMenu}
 /**
  * user 用户请求
  */
-export const reqDeleteUser = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
+export const reqDeleteUser = () => ajax(BASE + '/manage/role/getAllRole' , ({}), 'POST')
 export const reqUsers = () => ajax(BASE + '/manage/user/userInfo' , ({}), 'GET')
 export const reqAddOrUpdateUser = (user,username) => ajax(BASE + '/manage/user/addUser' , ({user,username}), 'POST')
 export const reqToGetAcctId = (accountName) => ajax(BASE + '/manage/user/toGetAcctId', ({accountName}), 'POST')
@@ -92,7 +92,7 @@ export const reqCheckPhone = (telPhone) => ajax(BASE + '/manage/user/checkPhone'
 /**
  * role 角色请求
  */
-export const reqRoles = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
+export const reqRoles = () => ajax(BASE + '/manage/role/getAllRole' , ({}), 'POST')
 export const reqAddRole = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
 export const reqUpdateRole = () => ajax(BASE + '/manage/user/addUser' , ({}), 'POST')
 

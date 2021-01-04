@@ -35,32 +35,30 @@ export default class Role extends Component {
   initColumn = () => {
     this.columns = [
       {
-        title: '角色名称',
-        dataIndex: 'name'
+        title: '角色ID',
+        dataIndex: 'roleId'
       },
       {
-        title: '创建时间',
-        dataIndex: 'create_time',
-        render: (create_time) => formateDate(create_time)
+        title: '创建名称',
+        dataIndex: 'roleName'
       },
       {
-        title: '授权时间',
-        dataIndex: 'auth_time',
-        render: formateDate
+        title: '上级角色ID',
+        dataIndex: 'superRoleId'
       },
       {
-        title: '授权人',
-        dataIndex: 'auth_name'
+        title: '角色描述',
+        dataIndex: 'description'
       },
     ]
   }
 
   getRoles = async () => {
     const result = await reqRoles()
-    if (result.status===0) {
+    if (result.status==='0') {
       const roles = result.data
       this.setState({
-        roles
+        roles : roles
       })
     }
   }
@@ -147,7 +145,7 @@ export default class Role extends Component {
     if (result.status===0) {
       // this.getRoles()
       // 如果当前更新的是自己角色的权限, 强制退出
-      if (role._id === memoryUtils.user.role_id) {
+      if (role.id === memoryUtils.user.roleid) {
         memoryUtils.user = {}
         storageUtils.removeUser()
         this.props.history.replace('/login')
@@ -177,7 +175,7 @@ export default class Role extends Component {
     const title = (
       <span>
         <Button type='primary' onClick={() => this.setState({isShowAdd: true})}>创建角色</Button> &nbsp;&nbsp;
-        <Button type='primary' disabled={!role._id} onClick={() => this.setState({isShowAuth: true})}>设置角色权限</Button>
+        <Button type='primary' disabled={!role.id} onClick={() => this.setState({isShowAuth: true})}>设置角色权限</Button>
       </span>
     )
 
@@ -185,13 +183,13 @@ export default class Role extends Component {
       <Card title={title}>
         <Table
           bordered
-          rowKey='_id'
+          rowKey='id'
           dataSource={roles}
           columns={this.columns}
           pagination={{defaultPageSize: PAGE_SIZE}}
           rowSelection={{
             type: 'radio',
-            selectedRowKeys: [role._id],
+            selectedRowKeys: [role.id],
             onSelect: (role) => { // 选择某个radio时回调
               this.setState({
                 role
