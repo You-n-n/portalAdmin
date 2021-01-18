@@ -83,11 +83,14 @@ export const reqGetOperationByAny = ({pageNum,pageSize,searchName,opType,opMenu}
 /**
  * user 用户请求
  */
-export const reqDeleteUser = () => ajax(BASE + '/manage/role/getAllRole' , ({}), 'POST')
+export const reqDeleteUser = (ids,username,account) => ajax(BASE + '/manage/user/delUser' , ({ids,username,account}), 'POST')
 export const reqUsers = () => ajax(BASE + '/manage/user/userInfo' , ({}), 'GET')
 export const reqAddOrUpdateUser = (user,username) => ajax(BASE + '/manage/user/addUser' , ({user,username}), 'POST')
 export const reqToGetAcctId = (accountName) => ajax(BASE + '/manage/user/toGetAcctId', ({accountName}), 'POST')
 export const reqCheckPhone = (telPhone) => ajax(BASE + '/manage/user/checkPhone',({telPhone}),'POST')
+export const reqCheckOldPwd = (oldPwd, username) => ajax(BASE + '/manage/user/checkPwd', ({oldPwd, username}), 'POST')
+export const reqCheckNewPwd = (newPwd, confirmPwd) => ajax(BASE + '/manage/user/checkPwd', ({newPwd, confirmPwd}), 'POST')
+export const reqUpdatePwd = (oldPwd, newPwd, username) => ajax(BASE + '/manage/user/updPwd', ({oldPwd, newPwd, username}), 'POST')
 
 /**
  * role 角色请求

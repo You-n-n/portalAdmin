@@ -62,31 +62,47 @@ class UserForm extends PureComponent {
             this.setState({phoneState:'success'})
           }
         }else{
-          this.setState({mailState:''})
+          this.setState({phoneState:''})
         }
       }
     })
   }
 
-  onBlurs = () => {
+  onAccountName = () => {
     this.props.form.validateFields( async (error,values) => {
       if(!error){
-        const{accountName,mail,prsnIdNum} = values
+        const{accountName} = values
         if(null != accountName && '' != accountName){
           this.setState({accountNameState:'success'})
         }else{
           this.setState({accountNameState:''})
         }
-        if(null != mail && '' != mail){
-          this.setState({mailState:'success'})
-        }else{
-          this.setState({mailState:''})
-        }
-        if(null != prsnIdNum && '' != prsnIdNum){
-          this.setState({prsnIdNumState:'success'})
-        }else{
-          this.setState({prsnIdNumState:''})
-        }
+      }
+    })
+  }
+
+  onMail = () => {
+    this.props.form.validateFields( async (error,values) => {
+      if(!error){
+        const{mail} = values
+      if(null != mail && '' != mail){
+        this.setState({mailState:'success'})
+      }else{
+        this.setState({mailState:''})
+      }
+      }
+    })
+  }
+
+  onPrsnIdNum = () => {
+    this.props.form.validateFields( async (error,values) => {
+      if(!error){
+        const{prsnIdNum} = values
+      if(null != prsnIdNum && '' != prsnIdNum){
+        this.setState({prsnIdNumState:'success'})
+      }else{
+        this.setState({prsnIdNumState:''})
+      }
       }
     })
   }
@@ -117,7 +133,7 @@ class UserForm extends PureComponent {
               initialValue: user.accountName,
             })(
               <Input placeholder='请输入用户名'
-                onBlur={this.onBlurs}
+                onBlur={this.onAccountName}
               />
             )
           }
@@ -146,7 +162,7 @@ class UserForm extends PureComponent {
           validateStatus={phoneState}>
           {
             getFieldDecorator('telPhone', {
-              initialValue: user.telPhone,
+              initialValue: user.telphone,
             })(
               <Input placeholder='请输入手机号'
                 onBlur = {this.checkPhone}
@@ -154,6 +170,7 @@ class UserForm extends PureComponent {
             )
           }
         </Item>
+        
         <Item label='邮箱'
           hasFeedback
           validateStatus={mailState}
@@ -163,7 +180,7 @@ class UserForm extends PureComponent {
               initialValue: user.mail,
             })(
               <Input placeholder='请输入邮箱'
-                onBlur={this.onBlurs}
+                onBlur={this.onMail}
               />
             )
           }
@@ -177,7 +194,7 @@ class UserForm extends PureComponent {
               initialValue: user.prsnIdNum,
             })(
               <Input placeholder='请输入身份证号'
-                onBlur={this.onBlurs}
+                onBlur={this.onPrsnIdNum}
               />
             )
           }

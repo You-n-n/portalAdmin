@@ -82,7 +82,6 @@ class ProductAddUpdate extends Component{
      * 获取一级/二级分类列表
      */
     getCategorys = async (parentId) =>{
-        debugger
         const result = await reqCategorys(parentId)
         if(result.status === '0'){
             const categorys = result.data

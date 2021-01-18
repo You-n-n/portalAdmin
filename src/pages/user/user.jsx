@@ -21,6 +21,7 @@ export default class User extends Component {
     users: [], // 所有用户列表
     roles: [], // 所有角色列表
     isShow: false, // 是否显示确认框
+    dels: [] // 要删除的数组
   }
 
   initColumns = () => {
@@ -28,28 +29,63 @@ export default class User extends Component {
       {
         title: '姓名',
         dataIndex: 'accountName',
-        key: 'accountName'
+        key: 'accountName',
+        width: 120,
+        fixed: 'left',
       },
       {
         title: '用户名',
         dataIndex: 'username',
-        key: 'username'
+        key: 'username',
+        width: 200,
+      },
+      {
+        title: '账号状态',
+        dataIndex: 'acctStatus',
+        key: 'acctStatus',
+        width: 200,
+      },
+      {
+        title: '性别',
+        dataIndex: 'sex',
+        key: 'sex',
+        width: 200,
+      },
+      {
+        title: '锁定原因',
+        dataIndex: 'lockReason',
+        key: 'lockReason',
+        width: 200,
+      },
+      {
+        title: '人员状态',
+        dataIndex: 'humanStatus',
+        key: 'humanStatus',
+        width: 200,
+      },
+      {
+        title: '组织机构',
+        dataIndex: 'orgaId',
+        key: 'orgaId',
+        width: 200,
       },
       {
         title: '邮箱',
         dataIndex: 'mail',
-        key: 'mail'
+        key: 'mail',
+        width: 200,
       },
-
       {
         title: '电话',
         dataIndex: 'telphone',
-        key: 'telphone'
+        key: 'telphone',
+        width: 200,
       },
       {
         title: '注册时间',
         dataIndex: 'addTime',
         key: 'addTime',
+        //width: 150,
         render: formateDate
       },
       // {
@@ -59,12 +95,14 @@ export default class User extends Component {
       // },
       {
         title: '操作',
+        width: 150,
         render: (user) => (
           <span>
             <LinkButton onClick={() => this.showUpdate(user)}>修改</LinkButton>
             <LinkButton onClick={() => this.deleteUser(user)}>删除</LinkButton>
           </span>
-        )
+        ),
+        fixed: 'right',
       },
     ]
   }
@@ -106,13 +144,46 @@ export default class User extends Component {
     Modal.confirm({
       title: `确认删除${user.username}吗?`,
       onOk: async () => {
-        const result = await reqDeleteUser(user.id)
-        if(result.status===0) {
-          message.success('删除用户成功!')
+        const {username} = memoryUtils.user;
+        let ids = []
+        let account = []
+        ids.push(user.id)
+        account.push(user.username)
+        const result = await reqDeleteUser(ids,username,account)
+        if(result.status === '0') {
+          message.success(result.msg)
           this.getUsers()
         }
       }
     })
+  }
+
+  /**
+   * 批量删除
+   */
+  delBatch = () => {
+    const dels = this.state.dels
+    let ids = []
+    let account = []
+    const {username} = memoryUtils.user;
+    if(dels.length === 0){
+      message.warn('请选择列')
+    }else{
+      for(let i = 0 ; i < dels.length ; i++){
+        ids.push(dels[i].id)
+        account.push(dels[i].username)
+      }
+      Modal.confirm({
+        title: `确认删除所选列吗?`,
+        onOk: async () => {
+          const result = await reqDeleteUser(ids,username,account)
+          if(result.status === '0') {
+            message.success(result.msg)
+            this.getUsers()
+          }
+        }
+      })
+    }
   }
 
   /*
@@ -169,25 +240,41 @@ export default class User extends Component {
     const {users, roles, isShow} = this.state
     const user = this.user || {}
 
-    const title = <Button type='primary' onClick={this.showAdd}>创建用户</Button>
+    const title =( <span>
+                      搜索栏
+                    </span> )
+    const extra = (
+                    <span>
+                      <Button type='danger' onClick={this.delBatch}>删除用户</Button>
+                      <Button style={{width: 90, margin:'0 15px'}}  type='primary' onClick={this.showAdd}>密码重置</Button>
+                      <Button type='primary' onClick={this.showAdd}>创建用户</Button>
+                    </span>
+                    )
 
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
         //console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
       },
       onSelect: (record, selected, selectedRows) => {
-        //console.log(record, selected, selectedRows);
+        this.setState({
+          dels : selectedRows
+        })
+        //console.log(selectedRows);
       },
       onSelectAll: (selected, selectedRows, changeRows) => {
+        this.setState({
+          dels : selectedRows
+        })
         //console.log(selected, selectedRows, changeRows);
       },
     };
 
     return (
-      <Card title={title}>
+      <Card title={title} extra={extra}>
         <Table
+          scroll={{ x: 2200}}
           rowSelection={rowSelection}
-          bordered
+          bordered={true}
           rowKey='id'
           dataSource={users}
           columns={this.columns}

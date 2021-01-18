@@ -1,14 +1,14 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
-import {Modal, Tabs, Button} from 'antd'
-import {reqWeather} from '../../api'
+import {Modal, Tabs, Icon, Popover, Drawer, message} from 'antd'
+import {reqWeather, reqUpdatePwd} from '../../api'
 import menuList from '../../config/menuConfig'
 import {formateDate} from '../../utils/dateUtils'
 import memoryUtils from '../../utils/memoryUtils'
 import storageUtils from '../../utils/storageUtils'
 import './index.less'
-import LinkButton from "../link-button";
-import {Link} from 'react-router-dom';
+import Password from './password'
+import Mine from './mine'
 
 const { TabPane } = Tabs;
 class Header extends Component {
@@ -17,9 +17,10 @@ class Header extends Component {
         currentTime: formateDate(Date.now(),'yyyy-MM-dd hh:mm:ss'), //当前时间字符串
         wea: '', 
         city: '',
-        mypanes: [],
-        activeKey: '',
-        panes:[],
+        clicked: false,
+        hovered: false,
+        visible: false,
+        password: false
     };
 
     getTime = () => {
@@ -59,35 +60,14 @@ class Header extends Component {
         return title;
     };
 
-    add = () => {
-        const title = this.getTitle()
-        
-        const activeKey = this.props.location.pathname;
-        console.log(activeKey)
-        const { panes } = this.state;
-        panes.push({ title: title, content: '', key: activeKey });
-        this.setState({ panes, activeKey });
-      };
-
-    constructor(props) {
-        super(props);
-        this.newTabIndex = 0;
-        const title = this.getTitle();
-        const panes = [
-          { title: title, content: '', key: title },
-        ];
-        this.state = {
-          activeKey: panes[0].key,
-          panes,
-        };
-      }
-
     /**
      * 退出登录
      */
     logout = () => {
         Modal.confirm({
                 content: '确定退出吗?',
+                cancelText: '再留一会',
+                okText: '狠心离开',
                 onOk : () => {
                     //console.log('OK',this);
                     //删除保存的user数据，
@@ -99,6 +79,26 @@ class Header extends Component {
             })
     };
 
+    updatePwd = async () => {
+        // 1. 收集输入数据
+        const user = this.form.getFieldsValue()
+        const error = this.form.getFieldsError()
+        const{oldPwd, newPwd} = user
+        const{username} = memoryUtils.user
+        if(error.oldPwd || error.newPwd || error.confirmPwd){
+            message.error('填写数据错误')
+        }else{
+            const result = await reqUpdatePwd(oldPwd,newPwd,username)
+            if('0' === result.status){
+                message.success(result.msg)
+                this.setState({
+                    password: false
+                })
+            }else{
+                message.error(result.msg)
+            }
+        }
+    }
     /**
      * 第一次render() 之后执行
      * 一般在此执行异步操作：发送ajax请求，启动定时器
@@ -117,65 +117,113 @@ class Header extends Component {
         //清除定时器
         clearInterval(this.intervalId);
     }
-    
-      onChange = activeKey => {
-        this.setState({ activeKey });
-      };
-    
-      onEdit = (targetKey, action) => {
-        this[action](targetKey);
-      };
-    
-      remove = targetKey => {
-        let { activeKey } = this.state;
-        let lastIndex;
-        this.state.panes.forEach((pane, i) => {
-          if (pane.key === targetKey) {
-            lastIndex = i - 1;
-          }
+
+    //隐藏弹窗并退出登录
+      hide = () => {
+        this.setState({
+          hovered: false,
         });
-        const panes = this.state.panes.filter(pane => pane.key !== targetKey);
-        if (panes.length && activeKey === targetKey) {
-          if (lastIndex >= 0) {
-            activeKey = panes[lastIndex].key;
-          } else {
-            activeKey = panes[0].key;
+        this.logout();
+      };
+    
+      //显示弹窗
+      handleHoverChange = visible => {
+        this.setState({
+          hovered: visible,
+        });
+      };
+
+      //用于改变图标方向
+      arrowDirection = () => {
+          let arrow 
+          const hover = this.state.hovered
+          if(false === hover){
+              arrow = "down"
+          }else{
+              arrow = "up"
           }
-        }
-        this.setState({ panes, activeKey });
+          return arrow
+      }
+
+      //展示右侧弹出列表
+      showDrawer = () => {
+        this.setState({
+            visible: true,
+            hovered: false
+        });
+      };
+    
+      //关闭右侧弹出列表
+      onClose = () => {
+        this.setState({
+            visible: false,
+            password: false,
+        });
+      };
+
+      //展示右侧弹出列表
+      opMine = () => {
+        this.setState({
+            password: true,
+            hovered: false
+        });
       };
 
     render() {
-
         const {currentTime, city, wea} = this.state;
         const {username} = memoryUtils.user;
+        const user = memoryUtils.user;
+        const arrow = this.arrowDirection();
         //得到当前需要显示的title
         const title = this.getTitle();
         return (
             <div className='header'>
                 <div className='header-top'>
                     <span>欢迎您, {username}  </span>
-                    <LinkButton onClick={this.logout}>退出</LinkButton>
-                </div>
-                <div className='header-bottom'>
-                {/* <div>
-                        <div style={{ marginBottom: 16 }}>
-                        <Button onClick={this.add}>ADD</Button>
+                    {/* <LinkButton onClick={this.logout}><Icon type="down" /></LinkButton> */}
+                    <Popover
+                    content={
+                        <div>
+                        <a onClick={this.showDrawer}>个人信息</a>  <p />
+                        <a onClick={this.opMine} >修改密码</a>  <p />
+                        <a onClick={this.hide}>退出登录</a>
                         </div>
-                    <Tabs
-                    hideAdd
-                    onChange={this.onChange}
-                    activeKey={this.state.activeKey}
-                    type="editable-card"
-                    onEdit={this.onEdit}
+                    }
+                    trigger="hover"
+                    visible={this.state.hovered}    
+                    onVisibleChange={this.handleHoverChange}
                     >
-                    {this.state.panes.map(pane => (
-                        // this.props.history.replace('/login')
-                        <TabPane tab={<Link to={pane.key}>{pane.title}</Link>} key={pane.key}>
-                        </TabPane>
-                    ))}
-                    </Tabs>
-                </div> */}
+                        <a><Icon type={arrow} /></a>
+                    </Popover>
+                </div>
+
+                    <Drawer
+                    title="个人信息"
+                    placement="right"
+                    closable={false}
+                    width={600}
+                    onClose={this.onClose}
+                    visible={this.state.visible}
+                    >
+                        <Mine
+                            user={user}
+                        />
+                    </Drawer>
+
+                    <Modal
+                    title="修改密码"
+                    visible={this.state.password}
+                    onOk={this.updatePwd}
+                    onCancel={this.onClose}
+                    destroyOnClose={true}
+                    >
+                        <Password 
+                            setForm={form => this.form = form}
+                            user={user}
+                        />
+                    </Modal>
+
+                <div className='header-bottom'>
                     <div className='header-bottom-left'>{title}</div>
                     <div className='header-bottom-right'>
                         <span>{currentTime}</span>

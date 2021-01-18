@@ -30,7 +30,6 @@ export default class LogDetail extends Component{
   }
 
   componentDidMount (){
-    debugger
     const {operLogDetail} = this.props
     const {afterCntt} = operLogDetail
     const {beforeCntt} = operLogDetail
