@@ -4,12 +4,14 @@ import {
   Button,
   Table,
   Modal,
-  message
+  message,
+  Icon
 } from 'antd'
 import {formateDate} from "../../utils/dateUtils"
 import LinkButton from "../../components/link-button/index"
 import {reqDeleteUser, reqUsers, reqAddOrUpdateUser} from "../../api/index";
 import UserForm from './user-form'
+import AuthType from './authtype'
 import memoryUtils from '../../utils/memoryUtils'
 
 /*
@@ -21,7 +23,10 @@ export default class User extends Component {
     users: [], // 所有用户列表
     roles: [], // 所有角色列表
     isShow: false, // 是否显示确认框
-    dels: [] // 要删除的数组
+    dels: [], // 要删除的数组
+    acctStatus: '',
+    authType: false, //权限配置
+    authTypeusername : '' //用于权限配置的用户名
   }
 
   initColumns = () => {
@@ -65,8 +70,8 @@ export default class User extends Component {
       },
       {
         title: '组织机构',
-        dataIndex: 'orgaId',
-        key: 'orgaId',
+        dataIndex: 'orgaName',
+        key: 'orgaName',
         width: 200,
       },
       {
@@ -226,6 +231,20 @@ export default class User extends Component {
     }
   }
 
+  authType = () => {
+    const dels = this.state.dels //选中的列  和相同类似  但只能选中一个
+    const {username} = dels[0]
+    this.setState({authTypeusername : username})
+    if(dels.length === 1){
+      this.setState({
+        authType : true
+      })
+    }else{
+      message.warning('请选择一列进行操作')
+    }
+    
+  }
+
   UNSAFE_componentWillMount () {
     this.initColumns()
   }
@@ -237,7 +256,7 @@ export default class User extends Component {
 
   render() {
 
-    const {users, roles, isShow} = this.state
+    const {users, roles, isShow, authType} = this.state
     const user = this.user || {}
 
     const title =( <span>
@@ -245,6 +264,7 @@ export default class User extends Component {
                     </span> )
     const extra = (
                     <span>
+                      <Button style={{width: 90, margin:'0 15px'}}  type='primary' onClick={this.authType}>角色配置</Button>
                       <Button type='danger' onClick={this.delBatch}>删除用户</Button>
                       <Button style={{width: 90, margin:'0 15px'}}  type='primary' onClick={this.showAdd}>密码重置</Button>
                       <Button type='primary' onClick={this.showAdd}>创建用户</Button>
@@ -295,6 +315,23 @@ export default class User extends Component {
             setForm={form => this.form = form}
             roles={roles}
             user={user}
+          />
+        </Modal>
+
+        <Modal
+          title= '角色配置'
+          visible={authType}
+          width='700px'
+          onOk={() => {
+            this.setState({authType: false})
+          }}
+          destroyOnClose={true}
+          onCancel={() => {
+            this.setState({authType: false})
+          }}
+        >
+          <AuthType
+            authTypeusername= {this.state.authTypeusername}
           />
         </Modal>
 

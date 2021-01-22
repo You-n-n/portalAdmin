@@ -98,6 +98,7 @@ export const reqUpdatePwd = (oldPwd, newPwd, username) => ajax(BASE + '/manage/u
 export const reqRoles = () => ajax(BASE + '/manage/role/getAllRole' , ({}), 'POST')
 export const reqAddRole = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
 export const reqUpdateRole = () => ajax(BASE + '/manage/user/addUser' , ({}), 'POST')
+export const reqGetAcctRoles = (username) => ajax(BASE + '/manage/role/getAcctRoles', ({username}), 'POST')
 
 //获取天气信息
 export const reqWeather = () => {
