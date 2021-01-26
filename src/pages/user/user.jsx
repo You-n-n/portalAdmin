@@ -32,17 +32,17 @@ export default class User extends Component {
   initColumns = () => {
     this.columns = [
       {
+        title: '用户名',
+        dataIndex: 'username',
+        key: 'username',
+        width: 180,
+        fixed: 'left',
+      },
+      {
         title: '姓名',
         dataIndex: 'accountName',
         key: 'accountName',
         width: 120,
-        fixed: 'left',
-      },
-      {
-        title: '用户名',
-        dataIndex: 'username',
-        key: 'username',
-        width: 200,
       },
       {
         title: '账号状态',
@@ -54,7 +54,7 @@ export default class User extends Component {
         title: '性别',
         dataIndex: 'sex',
         key: 'sex',
-        width: 200,
+        width: 100,
       },
       {
         title: '锁定原因',
@@ -233,9 +233,9 @@ export default class User extends Component {
 
   authType = () => {
     const dels = this.state.dels //选中的列  和相同类似  但只能选中一个
-    const {username} = dels[0]
-    this.setState({authTypeusername : username})
     if(dels.length === 1){
+      const {username} = dels[0]
+      this.setState({authTypeusername : username})
       this.setState({
         authType : true
       })
@@ -292,7 +292,7 @@ export default class User extends Component {
     return (
       <Card title={title} extra={extra}>
         <Table
-          scroll={{ x: 2200}}
+          scroll={{ x: 2000}}
           rowSelection={rowSelection}
           bordered={true}
           rowKey='id'

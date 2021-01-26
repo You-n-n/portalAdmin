@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
-import { Transfer } from 'antd';
-import {reqGetAcctRoles} from '../../api'
+import { message, Transfer } from 'antd';
+import {reqGetAcctRoles, reqUpdAcctRoles} from '../../api'
+import memoryUtils from '../../utils/memoryUtils'
 
 /*
 定时任务
@@ -41,12 +42,16 @@ export default class AuthType extends Component {
     
     filterOption = (inputValue, option) => option.description.indexOf(inputValue) > -1;
 
-    handleChange = targetKeys => {
-    this.setState({ targetKeys });
+    handleChange = async (targetKeys) => {
+      const username = this.props.authTypeusername;
+      const operator = memoryUtils.user.username;
+      const result = await reqUpdAcctRoles(username,targetKeys,operator)
+      message.success(result.msg)
+      this.setState({ targetKeys });
     };
 
     handleSearch = (dir, value) => {
-    console.log('search:', dir, value);
+      console.log('search:', dir, value);
     };
     
     render(){

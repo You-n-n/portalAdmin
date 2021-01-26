@@ -106,6 +106,8 @@ componentDidMount () {
   
   showName.set("categoryName","分类名称");
 
+  showName.set("roleName","角色名称");
+
   this.setState({
     showName:showName
   })

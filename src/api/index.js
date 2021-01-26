@@ -99,6 +99,7 @@ export const reqRoles = () => ajax(BASE + '/manage/role/getAllRole' , ({}), 'POS
 export const reqAddRole = (pageNum, pageSize) => ajax(BASE + '/ws/log/info' , ({pageNum, pageSize}), 'POST')
 export const reqUpdateRole = () => ajax(BASE + '/manage/user/addUser' , ({}), 'POST')
 export const reqGetAcctRoles = (username) => ajax(BASE + '/manage/role/getAcctRoles', ({username}), 'POST')
+export const reqUpdAcctRoles = (username,targetKeys,operator) => ajax(BASE + '/manage/role/updAcctRoles', ({username,targetKeys,operator}), 'POST')
 
 //获取天气信息
 export const reqWeather = () => {
