@@ -5,7 +5,7 @@ import jsonp from 'jsonp'
 import ajax from './ajax'
 import { message } from 'antd'
 
-const BASE = ''
+const BASE = '/go'
  // 登录
 //  export function reqLogin(username,password){
 //     return ajax('/portal/login', {username,password}, 'POST')

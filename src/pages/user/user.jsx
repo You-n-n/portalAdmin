@@ -23,7 +23,7 @@ export default class User extends Component {
     users: [], // 所有用户列表
     roles: [], // 所有角色列表
     isShow: false, // 是否显示确认框
-    dels: [], // 要删除的数组
+    selectedRows: [], // 要操作的数组
     acctStatus: '',
     authType: false, //权限配置
     authTypeusername : '' //用于权限配置的用户名
@@ -49,6 +49,14 @@ export default class User extends Component {
         dataIndex: 'acctStatus',
         key: 'acctStatus',
         width: 200,
+        render: (text) => {
+          if(text === '正常') {
+            return <div style={{ color: "#1Dc56F"}}>{text}</div>;
+          }else if (text === '锁定') {
+            return <div style={{ color: "#F8525F"}}>{text}</div>;
+          }
+          return <div>{text}</div>
+        }
       },
       {
         title: '性别',
@@ -167,7 +175,7 @@ export default class User extends Component {
    * 批量删除
    */
   delBatch = () => {
-    const dels = this.state.dels
+    const dels = this.state.selectedRows
     let ids = []
     let account = []
     const {username} = memoryUtils.user;
@@ -232,9 +240,9 @@ export default class User extends Component {
   }
 
   authType = () => {
-    const dels = this.state.dels //选中的列  和相同类似  但只能选中一个
-    if(dels.length === 1){
-      const {username} = dels[0]
+    const authTypes = this.state.selectedRows //选中的列  和相同类似  但只能选中一个
+    if(authTypes.length === 1){
+      const {username} = authTypes[0]
       this.setState({authTypeusername : username})
       this.setState({
         authType : true
@@ -264,10 +272,11 @@ export default class User extends Component {
                     </span> )
     const extra = (
                     <span>
+                      <Button type='primary' disabled>锁定/解锁</Button>
                       <Button style={{width: 90, margin:'0 15px'}}  type='primary' onClick={this.authType}>角色配置</Button>
+                      <Button type='primary' disabled>密码重置</Button>
+                      <Button style={{width: 90, margin:'0 15px'}}  type='primary' onClick={this.showAdd}>创建用户</Button>
                       <Button type='danger' onClick={this.delBatch}>删除用户</Button>
-                      <Button style={{width: 90, margin:'0 15px'}}  type='primary' onClick={this.showAdd}>密码重置</Button>
-                      <Button type='primary' onClick={this.showAdd}>创建用户</Button>
                     </span>
                     )
 
@@ -277,13 +286,13 @@ export default class User extends Component {
       },
       onSelect: (record, selected, selectedRows) => {
         this.setState({
-          dels : selectedRows
+          selectedRows : selectedRows
         })
         //console.log(selectedRows);
       },
       onSelectAll: (selected, selectedRows, changeRows) => {
         this.setState({
-          dels : selectedRows
+          selectedRows : selectedRows
         })
         //console.log(selected, selectedRows, changeRows);
       },
@@ -323,7 +332,10 @@ export default class User extends Component {
           visible={authType}
           width='700px'
           onOk={() => {
-            this.setState({authType: false})
+            this.setState({
+              authType: false,
+              selectedRows: []
+            })
           }}
           destroyOnClose={true}
           onCancel={() => {

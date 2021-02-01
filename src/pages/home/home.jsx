@@ -3,11 +3,31 @@ import './home.less'
 import { Comment, Tooltip, List, Collapse, Calendar, Timeline,  message  } from 'antd';
 import moment from 'moment';
 import {reqGetAllMsgBoard} from '../../api/'
+import memoryUtils from '../../utils/memoryUtils'
 /**
  * 首页路由
  */
 
 const { Panel } = Collapse;
+
+{/*
+  开启socket
+  但不太会用
+// var ws = new WebSocket("ws://localhost:8888/go/imserver/10");
+// ws.onopen = function(evt) { 
+// console.log("用户xxx已经连接 ..."); 
+// ws.send('{"toUserId" : "20" , "message" : "Hello WebSockets!"}');
+// };
+
+// ws.onmessage = function(evt) {
+// console.log ("println message");
+// ws.close();
+// };
+
+// ws.onclose = function(evt) {
+// console.log("Connection closed.");
+// }; 
+*/}
 
 // const data = [
 //       {

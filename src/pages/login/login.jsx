@@ -95,12 +95,6 @@ class Login extends Component {
         //debugger
     }
     
-    //在第一次render()之前执行一次
-    //为第一次render()渲染准备数据
-    // UNSAFE_componentWillMount () {
-    //     this.getCode()
-    // }
-
     render() {
 
         //如果用户已经登录,自动跳转到管理页面
@@ -140,7 +134,7 @@ class Login extends Component {
                                     },
                                 ],
                             })(
-                                <Input prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>} type="password"
+                                <Input.Password prefix={<Icon type="lock" style={{color: 'rgba(0,0,0,.25)'}}/>} type="password"
                                        placeholder="密码"/>,
                             )}
                         </Item>
@@ -156,13 +150,14 @@ class Login extends Component {
                                         ],
                                     })(
                                         <Input prefix={<Icon type="edit" style={{color: 'rgba(0,0,0,.25)'}}/>} type="verification"
-                                            placeholder="验证码"/>,
+                                            placeholder="验证码"
+                                            autoComplete="off"/>,
                                     )}
                                 </Item>
                             </div>
 
                             <div className='login-verification2'>
-                                <img id="img" style={{height:50,width:100}} src='/img/getVerifyCode' onClick={this.getCode} alt="验证码" />
+                                <a><img id="img" style={{height:50,width:100}} src='/img/getVerifyCode' onClick={this.getCode} alt="验证码" /></a>
                             </div>
                         </div>
 
