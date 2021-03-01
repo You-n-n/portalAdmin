@@ -4,7 +4,7 @@ import {reqGetAcctRoles, reqUpdAcctRoles} from '../../api'
 import memoryUtils from '../../utils/memoryUtils'
 
 /*
-定时任务
+角色分配
  */
 export default class AuthType extends Component {
 

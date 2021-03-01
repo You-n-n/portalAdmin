@@ -91,7 +91,7 @@ class Login extends Component {
     }
 
     getCode ()  {
-        document.getElementById("img").src='/img/getVerifyCode'+Math.random()
+        document.getElementById("img").src='/go/img/getVerifyCode'+Math.random()
         //debugger
     }
     
@@ -157,7 +157,7 @@ class Login extends Component {
                             </div>
 
                             <div className='login-verification2'>
-                                <a><img id="img" style={{height:50,width:100}} src='/img/getVerifyCode' onClick={this.getCode} alt="验证码" /></a>
+                                <a><img id="img" style={{height:50,width:100}} src='/go/img/getVerifyCode' onClick={this.getCode} alt="验证码" /></a>
                             </div>
                         </div>
 

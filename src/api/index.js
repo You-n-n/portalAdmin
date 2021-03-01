@@ -61,7 +61,7 @@ export const reqUploadAndUpdateProduct = (product,username) => ajax(BASE + '/man
 //删除图片
 export const reqDeleteImg = (name) => ajax(BASE + '/manage/product/delImg', {name}, 'POST')
 //根据分类Id获取该分类下的所有商品
-export const reqGetProductById = (pageNum,pageSize,id) => ajax(BASE + 'manage/product/getProductById', {pageNum,pageSize,id},'GET')
+export const reqGetProductById = (pageNum,pageSize,id) => ajax(BASE + '/manage/product/getProductById', {pageNum,pageSize,id},'GET')
 
 /**
  * 其他请求
@@ -91,6 +91,9 @@ export const reqCheckPhone = (telPhone) => ajax(BASE + '/manage/user/checkPhone'
 export const reqCheckOldPwd = (oldPwd, username) => ajax(BASE + '/manage/user/checkPwd', ({oldPwd, username}), 'POST')
 export const reqCheckNewPwd = (newPwd, confirmPwd) => ajax(BASE + '/manage/user/checkPwd', ({newPwd, confirmPwd}), 'POST')
 export const reqUpdatePwd = (oldPwd, newPwd, username) => ajax(BASE + '/manage/user/updPwd', ({oldPwd, newPwd, username}), 'POST')
+export const reqLockUser = (ids,acount,username,lockReason) => ajax(BASE + '/manage/user/lockUser', ({ids,acount,username,lockReason}), 'POST')
+export const reqBreakLock = (ids,acount,username) => ajax(BASE + '/manage/user/breakLock', ({ids,acount,username}), 'POST')
+
 
 /**
  * role 角色请求

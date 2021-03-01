@@ -4,7 +4,8 @@ import {
   Form,
   Select,
   Input,
-  message
+  message,
+  Radio 
 } from 'antd'
 import {reqToGetAcctId,reqCheckPhone} from '../../api/index'
 
@@ -153,6 +154,21 @@ class UserForm extends PureComponent {
                 readOnly={true}
                 onFocus={this.getAcctId}
              />
+            )
+          }
+        </Item>
+
+        <Item label='性别'
+          hasFeedback
+          validateStatus={phoneState}>
+          {
+            getFieldDecorator('sex', {
+              initialValue: user.sex,
+            })(
+              <Radio.Group name="radiogroup" value = {user.sex}>
+                <Radio value={1}>男</Radio>
+                <Radio value={2}>女</Radio>
+              </Radio.Group>
             )
           }
         </Item>

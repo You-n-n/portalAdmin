@@ -196,18 +196,22 @@ export default class Category extends Component{
     }
 
     //删除分类
-    delCategory= async (category) => {
-        //debugger
-        const id = category.id
-        const {username} = memoryUtils.user;
-        const result = await reqDelCategorys(id,username)
-        //console.log(result.status)
-        if(result.status === '0'){
-            message.success(result.msg)
-            this.getCategorys()
-        }else{
-            message.error(result.msg)
-        }
+    delCategory=  (category) => {
+        Modal.confirm({
+            title: `确认删除吗?`,
+            onOk: async () => {
+                const id = category.id
+                const {username} = memoryUtils.user;
+                const result = await reqDelCategorys(id,username)
+                //console.log(result.status)
+                if(result.status === '0'){
+                    message.success(result.msg)
+                    this.getCategorys()
+                }else{
+                    message.error(result.msg)
+                }
+            }
+          })
     }
 
     UNSAFE_componentWillMount () {

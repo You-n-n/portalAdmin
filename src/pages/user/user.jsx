@@ -5,13 +5,13 @@ import {
   Table,
   Modal,
   message,
-  Icon
 } from 'antd'
 import {formateDate} from "../../utils/dateUtils"
 import LinkButton from "../../components/link-button/index"
-import {reqDeleteUser, reqUsers, reqAddOrUpdateUser} from "../../api/index";
+import {reqDeleteUser, reqUsers, reqAddOrUpdateUser, reqLockUser, reqBreakLock} from "../../api/index";
 import UserForm from './user-form'
 import AuthType from './authtype'
+import LockReason from './lockreason'
 import memoryUtils from '../../utils/memoryUtils'
 
 /*
@@ -26,7 +26,9 @@ export default class User extends Component {
     selectedRows: [], // 要操作的数组
     acctStatus: '',
     authType: false, //权限配置
-    authTypeusername : '' //用于权限配置的用户名
+    authTypeusername : '', //用于权限配置的用户名
+    lockReason: false, // 锁定原因弹窗
+    lockReasonLoading: false, //锁定弹窗确认按钮的loading
   }
 
   initColumns = () => {
@@ -172,6 +174,75 @@ export default class User extends Component {
   }
 
   /**
+   * 锁定指定用户
+   */
+  lockUser = () => {
+    const locks = this.state.selectedRows
+    if(locks.length === 0){
+      message.warn('请选择要操作的列')
+    }else{
+      this.setState({
+        lockReason : true
+      })
+    }
+  }
+
+  sendLockReason = async () =>{
+    const locks = this.state.selectedRows
+    let ids = []
+    let account = []
+    const {username} = memoryUtils.user;
+    for(let i = 0 ; i < locks.length ; i++){
+      ids.push(locks[i].id)
+      account.push(locks[i].username)
+    }
+    const lockReason = this.form.getFieldsValue()
+    this.setState({
+      lockReasonLoading : true
+    })
+    const result = await reqLockUser(ids,account,username,lockReason.lockreason)
+    if(result.status === '0'){
+      this.setState({
+        lockReason: false,
+        lockReasonLoading : false
+      })
+      message.success(result.msg)
+      this.getUsers()
+    }else{
+      this.setState({
+        lockReason: true,
+        lockReasonLoading : false
+      })
+      message.warn(result.msg)
+    }
+  }
+
+  /**
+   * 解锁
+   */
+  breakLock = async () => {
+    const locks = this.state.selectedRows
+    let ids = []
+    let account = []
+    const {username} = memoryUtils.user;
+    if(locks.length === 0){
+      message.warn('请选择要操作的列')
+    }else{
+      for(let i = 0 ; i < locks.length ; i++){
+      ids.push(locks[i].id)
+      account.push(locks[i].username)
+      }
+      const result = await reqBreakLock(ids,account,username)
+        if(result.status === '0'){
+          message.success(result.msg)
+          this.getUsers()
+        }else{
+          message.warn(result.msg)
+        }
+    }
+  }
+
+  /**
    * 批量删除
    */
   delBatch = () => {
@@ -180,7 +251,7 @@ export default class User extends Component {
     let account = []
     const {username} = memoryUtils.user;
     if(dels.length === 0){
-      message.warn('请选择列')
+      message.warn('请选择要操作的列')
     }else{
       for(let i = 0 ; i < dels.length ; i++){
         ids.push(dels[i].id)
@@ -264,7 +335,7 @@ export default class User extends Component {
 
   render() {
 
-    const {users, roles, isShow, authType} = this.state
+    const {users, roles, isShow, authType, lockReason, lockReasonLoading} = this.state
     const user = this.user || {}
 
     const title =( <span>
@@ -272,8 +343,9 @@ export default class User extends Component {
                     </span> )
     const extra = (
                     <span>
-                      <Button type='primary' disabled>锁定/解锁</Button>
-                      <Button style={{width: 90, margin:'0 15px'}}  type='primary' onClick={this.authType}>角色配置</Button>
+                      <Button type='primary' onClick={this.lockUser}>锁定</Button>
+                      <Button style={{margin:'0 15px'}} type='primary' onClick={this.breakLock}>解锁</Button>
+                      <Button style={{width: 90, margin:'0 15px 0 0'}}  type='primary' onClick={this.authType}>角色配置</Button>
                       <Button type='primary' disabled>密码重置</Button>
                       <Button style={{width: 90, margin:'0 15px'}}  type='primary' onClick={this.showAdd}>创建用户</Button>
                       <Button type='danger' onClick={this.delBatch}>删除用户</Button>
@@ -347,6 +419,21 @@ export default class User extends Component {
           />
         </Modal>
 
+        <Modal
+          title= '锁定原因'
+          visible={lockReason}
+          width='500px'
+          onOk={this.sendLockReason}
+          destroyOnClose={true}
+          confirmLoading={lockReasonLoading}
+          onCancel={() => {
+            this.setState({lockReason: false})
+          }}
+        >
+          <LockReason
+            setForm={form => this.form = form}
+          />
+        </Modal>
       </Card>
     )
   }

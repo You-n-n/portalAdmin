@@ -4,7 +4,6 @@ import memoryUtils from '../../utils/memoryUtils'
 import {reqCheckOldPwd, reqCheckNewPwd} from '../../api/index'
 
 const {Item} = Form 
-const { TextArea} = Input
 /*
 修改密码
  */
