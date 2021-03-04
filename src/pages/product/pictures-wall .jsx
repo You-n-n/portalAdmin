@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Upload, Icon, Modal, message } from 'antd';
-import {reqDeleteImg} from '../../api'
+import { reqDeleteImg } from '../../api'
 import { BASE_IMG_URL } from '../../utils/constants';
 
 function getBase64(file) {
@@ -37,12 +37,12 @@ export default class PicturesWall extends Component {
     ],
   };
 
-  constructor (props) {
+  constructor(props) {
     super(props)
-     let fileList = [] //如果传入的有 则生成默认
-    const {imgs} = this.props
-    if(imgs && imgs.length>0){
-      fileList = imgs.map((img,index) => ({
+    let fileList = [] //如果传入的有 则生成默认
+    const { imgs } = this.props
+    if (imgs && imgs.length > 0) {
+      fileList = imgs.map((img, index) => ({
         uid: -index,
         name: img,
         status: 'done',
@@ -61,7 +61,7 @@ export default class PicturesWall extends Component {
   //获取所有已上传图片文件名
   getImgs = () => {
     return this.state.fileList.map(file => file.name)
-}
+  }
 
   /**
    * 隐藏Modal
@@ -69,7 +69,7 @@ export default class PicturesWall extends Component {
   handleCancel = () => this.setState({ previewVisible: false })
 
   handlePreview = async file => {
-      //显示指定file的大图
+    //显示指定file的大图
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
     }
@@ -84,31 +84,31 @@ export default class PicturesWall extends Component {
    * 
    * 所有图片上传的数组 
    */
-  handleChange = async ({file,fileList }) => {
+  handleChange = async ({ file, fileList }) => {
 
     //一旦上传成功,就将上传的file 的信息修正
-    if(file.status === 'done'){
+    if (file.status === 'done') {
       const result = file.response //{status: 0 ; data: {name : '' , url : ''}}
-      if(result.status === '0'){
+      if (result.status === '0') {
         message.success('上传图片成功')
-        const {name, url} = result.data
-        file = fileList[fileList.length-1]
+        const { name, url } = result.data
+        file = fileList[fileList.length - 1]
         file.name = name
         file.url = url
-      }else{
+      } else {
         message.error('上传图片失败')
-      } 
-    } else if (file.status === 'removed'){
+      }
+    } else if (file.status === 'removed') {
       const result = await reqDeleteImg(file.name)
-      if(result.status === '0'){
+      if (result.status === '0') {
         message.success('删除图片成功')
-      }else{
+      } else {
         message.error('删除图片失败')
       }
     }
 
     this.setState({ fileList });
-}
+  }
 
   render() {
     const { previewVisible, previewImage, fileList } = this.state;

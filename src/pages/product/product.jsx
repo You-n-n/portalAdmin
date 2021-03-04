@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Switch, Route, Redirect} from 'react-router-dom'
+import React, { Component } from 'react'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import './product.less'
 
 import ProductHome from './home'
@@ -10,7 +10,7 @@ import ProductDetail from './detail'
  * 商品路由
  */
 
-export default class Product extends Component{
+export default class Product extends Component {
     render() {
         return (
             <Switch>

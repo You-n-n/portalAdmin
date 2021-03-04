@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {Form, Select, Input} from 'antd'
+import { Form, Select, Input } from 'antd'
 /**
  * 添加分类的form组件
  */
@@ -15,13 +15,13 @@ class AddForm extends Component {
         parentId: PropTypes.string.isRequired, //父分类id
     }
 
-    UNSAFE_componentWillMount () {
+    UNSAFE_componentWillMount() {
         this.props.setForm(this.props.form)
     }
 
     render() {
-        const {categorys, parentId} = this.props
-        const {getFieldDecorator} = this.props.form
+        const { categorys, parentId } = this.props
+        const { getFieldDecorator } = this.props.form
 
         return (
             <Form>
@@ -30,7 +30,7 @@ class AddForm extends Component {
                         getFieldDecorator(
                             'parentId', {
                             initialValue: parentId,
-                            }
+                        }
                         )(
                             <Select>
                                 <Option value='0'>一级分类</Option>
@@ -46,11 +46,11 @@ class AddForm extends Component {
                     {
                         getFieldDecorator(
                             'categoryName', {
-                                initialValue: '',
-                                rules: [
-                                    {required: true, message: '分类名称必须输入'}
-                                ]
-                            }
+                            initialValue: '',
+                            rules: [
+                                { required: true, message: '分类名称必须输入' }
+                            ]
+                        }
                         )(
                             <Input placeholder='请输入分类名称' />
                         )
@@ -61,4 +61,4 @@ class AddForm extends Component {
     }
 }
 
-export default  Form.create()(AddForm)
+export default Form.create()(AddForm)

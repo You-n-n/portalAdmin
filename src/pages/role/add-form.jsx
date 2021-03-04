@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
   Form,
@@ -16,7 +16,7 @@ class AddForm extends Component {
     setForm: PropTypes.func.isRequired, // 用来传递form对象的函数
   }
 
-  UNSAFE_componentWillMount () {
+  UNSAFE_componentWillMount() {
     this.props.setForm(this.props.form)
   }
 
@@ -35,10 +35,10 @@ class AddForm extends Component {
             getFieldDecorator('roleName', {
               initialValue: '',
               rules: [
-                {required: true, message: '角色名称必须输入'}
+                { required: true, message: '角色名称必须输入' }
               ]
             })(
-              <Input placeholder='请输入角色名称'/>
+              <Input placeholder='请输入角色名称' />
             )
           }
         </Item>

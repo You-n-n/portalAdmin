@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {
   Card,
   Button,
@@ -6,12 +6,12 @@ import {
   Modal,
   message
 } from 'antd'
-import {PAGE_SIZE} from "../../utils/constants"
-import {reqRoles, reqAddRole, reqUpdateRole} from '../../api'
+import { PAGE_SIZE } from "../../utils/constants"
+import { reqRoles, reqAddRole, reqUpdateRole } from '../../api'
 import AddForm from './add-form'
 import AuthForm from './auth-form'
 import memoryUtils from "../../utils/memoryUtils"
-import {formateDate} from '../../utils/dateUtils'
+import { formateDate } from '../../utils/dateUtils'
 import storageUtils from "../../utils/storageUtils";
 
 /*
@@ -26,7 +26,7 @@ export default class Role extends Component {
     isShowAuth: false, // 是否显示设置权限界面
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.auth = React.createRef()
@@ -55,10 +55,10 @@ export default class Role extends Component {
 
   getRoles = async () => {
     const result = await reqRoles()
-    if (result.status==='0') {
+    if (result.status === '0') {
       const roles = result.data
       this.setState({
-        roles : roles
+        roles: roles
       })
     }
   }
@@ -90,13 +90,13 @@ export default class Role extends Component {
         })
 
         // 收集输入数据
-        const {roleName} = values
+        const { roleName } = values
         this.form.resetFields()
 
         // 请求添加
         const result = await reqAddRole(roleName)
         // 根据结果提示/更新列表显示
-        if (result.status===0) {
+        if (result.status === 0) {
           message.success('添加角色成功')
           // this.getRoles()
           // 新产生的角色
@@ -142,7 +142,7 @@ export default class Role extends Component {
 
     // 请求更新
     const result = await reqUpdateRole(role)
-    if (result.status===0) {
+    if (result.status === 0) {
       // this.getRoles()
       // 如果当前更新的是自己角色的权限, 强制退出
       if (role.id === memoryUtils.user.roleid) {
@@ -160,22 +160,22 @@ export default class Role extends Component {
     }
   }
 
-  UNSAFE_componentWillMount () {
+  UNSAFE_componentWillMount() {
     this.initColumn()
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.getRoles()
   }
 
   render() {
 
-    const {roles, role, isShowAdd, isShowAuth} = this.state
+    const { roles, role, isShowAdd, isShowAuth } = this.state
 
     const title = (
       <span>
-        <Button type='primary' onClick={() => this.setState({isShowAdd: true})}>创建角色</Button> &nbsp;&nbsp;
-        <Button type='primary' disabled={!role.id} onClick={() => this.setState({isShowAuth: true})}>设置角色权限</Button>
+        <Button type='primary' onClick={() => this.setState({ isShowAdd: true })}>创建角色</Button> &nbsp;&nbsp;
+        <Button type='primary' disabled={!role.id} onClick={() => this.setState({ isShowAuth: true })}>设置角色权限</Button>
       </span>
     )
 
@@ -186,7 +186,7 @@ export default class Role extends Component {
           rowKey='id'
           dataSource={roles}
           columns={this.columns}
-          pagination={{defaultPageSize: PAGE_SIZE}}
+          pagination={{ defaultPageSize: PAGE_SIZE }}
           rowSelection={{
             type: 'radio',
             selectedRowKeys: [role.id],
@@ -205,7 +205,7 @@ export default class Role extends Component {
           visible={isShowAdd}
           onOk={this.addRole}
           onCancel={() => {
-            this.setState({isShowAdd: false})
+            this.setState({ isShowAdd: false })
             this.form.resetFields()
           }}
         >
@@ -219,10 +219,10 @@ export default class Role extends Component {
           visible={isShowAuth}
           onOk={this.updateRole}
           onCancel={() => {
-            this.setState({isShowAuth: false})
+            this.setState({ isShowAuth: false })
           }}
         >
-          <AuthForm ref={this.auth} role={role}/>
+          <AuthForm ref={this.auth} role={role} />
         </Modal>
       </Card>
     )

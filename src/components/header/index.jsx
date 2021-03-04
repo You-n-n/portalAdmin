@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {withRouter} from 'react-router-dom'
-import {Modal, Tabs, Icon, Popover, Drawer, message} from 'antd'
-import {reqWeather, reqUpdatePwd} from '../../api'
+import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import { Modal, Tabs, Icon, Popover, Drawer, message } from 'antd'
+import { reqWeather, reqUpdatePwd } from '../../api'
 import menuList from '../../config/menuConfig'
-import {formateDate} from '../../utils/dateUtils'
+import { formateDate } from '../../utils/dateUtils'
 import memoryUtils from '../../utils/memoryUtils'
 import storageUtils from '../../utils/storageUtils'
 import './index.less'
@@ -14,8 +14,8 @@ const { TabPane } = Tabs;
 class Header extends Component {
 
     state = {
-        currentTime: formateDate(Date.now(),'yyyy-MM-dd hh:mm:ss'), //当前时间字符串
-        wea: '', 
+        currentTime: formateDate(Date.now(), 'yyyy-MM-dd hh:mm:ss'), //当前时间字符串
+        wea: '',
         city: '',
         clicked: false,
         hovered: false,
@@ -27,15 +27,15 @@ class Header extends Component {
         //每隔1s获取当前时间，并更新状态数据
         this.intervalId = setInterval(() => {
             const currentTime = formateDate(Date.now());
-            this.setState({currentTime});
+            this.setState({ currentTime });
         }, 1000);
     };
 
     getWeather = async () => {
         //调用接口请求异步获取数据
-        const {city, wea} = await reqWeather();
+        const { city, wea } = await reqWeather();
         //更新状态
-        this.setState({city, wea});
+        this.setState({ city, wea });
 
     };
 
@@ -65,36 +65,36 @@ class Header extends Component {
      */
     logout = () => {
         Modal.confirm({
-                content: '确定退出吗?',
-                cancelText: '再留一会',
-                okText: '狠心离开',
-                onOk : () => {
-                    //console.log('OK',this);
-                    //删除保存的user数据，
-                    storageUtils.removeUser();
-                    memoryUtils.user = {};
-                    //跳转到login
-                    this.props.history.replace('/login');
-                }
-            })
+            content: '确定退出吗?',
+            cancelText: '再留一会',
+            okText: '狠心离开',
+            onOk: () => {
+                //console.log('OK',this);
+                //删除保存的user数据，
+                storageUtils.removeUser();
+                memoryUtils.user = {};
+                //跳转到login
+                this.props.history.replace('/login');
+            }
+        })
     };
 
     updatePwd = async () => {
         // 1. 收集输入数据
         const user = this.form.getFieldsValue()
         const error = this.form.getFieldsError()
-        const{oldPwd, newPwd} = user
-        const{username} = memoryUtils.user
-        if(error.oldPwd || error.newPwd || error.confirmPwd){
+        const { oldPwd, newPwd } = user
+        const { username } = memoryUtils.user
+        if (error.oldPwd || error.newPwd || error.confirmPwd) {
             message.error('填写数据错误')
-        }else{
-            const result = await reqUpdatePwd(oldPwd,newPwd,username)
-            if('0' === result.status){
+        } else {
+            const result = await reqUpdatePwd(oldPwd, newPwd, username)
+            if ('0' === result.status) {
                 message.success(result.msg)
                 this.setState({
                     password: false
                 })
-            }else{
+            } else {
                 message.error(result.msg)
             }
         }
@@ -119,59 +119,59 @@ class Header extends Component {
     }
 
     //隐藏弹窗并退出登录
-      hide = () => {
+    hide = () => {
         this.setState({
-          hovered: false,
+            hovered: false,
         });
         this.logout();
-      };
-    
-      //显示弹窗
-      handleHoverChange = visible => {
+    };
+
+    //显示弹窗
+    handleHoverChange = visible => {
         this.setState({
-          hovered: visible,
+            hovered: visible,
         });
-      };
+    };
 
-      //用于改变图标方向
-      arrowDirection = () => {
-          let arrow 
-          const hover = this.state.hovered
-          if(false === hover){
-              arrow = "down"
-          }else{
-              arrow = "up"
-          }
-          return arrow
-      }
+    //用于改变图标方向
+    arrowDirection = () => {
+        let arrow
+        const hover = this.state.hovered
+        if (false === hover) {
+            arrow = "down"
+        } else {
+            arrow = "up"
+        }
+        return arrow
+    }
 
-      //展示右侧弹出列表
-      showDrawer = () => {
+    //展示右侧弹出列表
+    showDrawer = () => {
         this.setState({
             visible: true,
             hovered: false
         });
-      };
-    
-      //关闭右侧弹出列表
-      onClose = () => {
+    };
+
+    //关闭右侧弹出列表
+    onClose = () => {
         this.setState({
             visible: false,
             password: false,
         });
-      };
+    };
 
-      //展示右侧弹出列表
-      opMine = () => {
+    //展示右侧弹出列表
+    opMine = () => {
         this.setState({
             password: true,
             hovered: false
         });
-      };
+    };
 
     render() {
-        const {currentTime, city, wea} = this.state;
-        const {username} = memoryUtils.user;
+        const { currentTime, city, wea } = this.state;
+        const { username } = memoryUtils.user;
         const user = memoryUtils.user;
         const arrow = this.arrowDirection();
         //得到当前需要显示的title
@@ -182,46 +182,46 @@ class Header extends Component {
                     <span>欢迎您, {username}  </span>
                     {/* <LinkButton onClick={this.logout}><Icon type="down" /></LinkButton> */}
                     <Popover
-                    content={
-                        <div>
-                        <a onClick={this.showDrawer}>个人信息</a>  <p />
-                        <a onClick={this.opMine} >修改密码</a>  <p />
-                        <a onClick={this.hide}>退出登录</a>
-                        </div>
-                    }
-                    trigger="hover"
-                    visible={this.state.hovered}    
-                    onVisibleChange={this.handleHoverChange}
+                        content={
+                            <div>
+                                <a onClick={this.showDrawer}>个人信息</a>  <p />
+                                <a onClick={this.opMine} >修改密码</a>  <p />
+                                <a onClick={this.hide}>退出登录</a>
+                            </div>
+                        }
+                        trigger="hover"
+                        visible={this.state.hovered}
+                        onVisibleChange={this.handleHoverChange}
                     >
                         <a><Icon type={arrow} /></a>
                     </Popover>
                 </div>
 
-                    <Drawer
+                <Drawer
                     title="个人信息"
                     placement="right"
                     closable={false}
                     width={600}
                     onClose={this.onClose}
                     visible={this.state.visible}
-                    >
-                        <Mine
-                            user={user}
-                        />
-                    </Drawer>
+                >
+                    <Mine
+                        user={user}
+                    />
+                </Drawer>
 
-                    <Modal
+                <Modal
                     title="修改密码"
                     visible={this.state.password}
                     onOk={this.updatePwd}
                     onCancel={this.onClose}
                     destroyOnClose={true}
-                    >
-                        <Password 
-                            setForm={form => this.form = form}
-                            user={user}
-                        />
-                    </Modal>
+                >
+                    <Password
+                        setForm={form => this.form = form}
+                        user={user}
+                    />
+                </Modal>
 
                 <div className='header-bottom'>
                     <div className='header-bottom-left'>{title}</div>

@@ -28,7 +28,9 @@ class UserForm extends PureComponent {
     phoneState:'',
     usernameState:'',
     mailState: '',
-    prsnIdNumState:''
+    prsnIdNumState:'',
+    sexState:'',
+    orgaState:''
   }
 
   getAcctId = () => {
@@ -95,6 +97,19 @@ class UserForm extends PureComponent {
     })
   }
 
+  onOrga = () => {
+    this.props.form.validateFields( async (error,values) => {
+      if(!error){
+        const{orgaName} = values
+      if(null != orgaName && '' != orgaName){
+        this.setState({orgaState:'success'})
+      }else{
+        this.setState({orgaState:''})
+      }
+      }
+    })
+  }
+
   onPrsnIdNum = () => {
     this.props.form.validateFields( async (error,values) => {
       if(!error){
@@ -116,7 +131,7 @@ class UserForm extends PureComponent {
 
     const {roles, user} = this.props
     const { getFieldDecorator } = this.props.form
-    const {accountNameState,usernameState,phoneState,mailState,prsnIdNumState} = this.state
+    const {accountNameState,usernameState,phoneState,mailState,prsnIdNumState,sexState,orgaState} = this.state
     // 指定Item布局的配置对象
     const formItemLayout = {
       labelCol: { span: 4 },  // 左侧label的宽度
@@ -160,7 +175,7 @@ class UserForm extends PureComponent {
 
         <Item label='性别'
           hasFeedback
-          validateStatus={phoneState}>
+          validateStatus={sexState}>
           {
             getFieldDecorator('sex', {
               initialValue: user.sex,
@@ -182,6 +197,20 @@ class UserForm extends PureComponent {
             })(
               <Input placeholder='请输入手机号'
                 onBlur = {this.checkPhone}
+              />
+            )
+          }
+        </Item>
+
+        <Item label='组织机构'
+          hasFeedback
+          validateStatus={orgaState}>
+          {
+            getFieldDecorator('orgaName', {
+              initialValue: user.orgaName,
+            })(
+              <Input placeholder='请输入所属组织'
+                onBlur = {this.onOrga}
               />
             )
           }

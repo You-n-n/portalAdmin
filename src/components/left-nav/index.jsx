@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Link, withRouter} from 'react-router-dom'
+import React, { Component } from 'react'
+import { Link, withRouter } from 'react-router-dom'
 import logo from '../../assets/images/logo.png'
 import './index.less'
 import menuList from '../../config/menuConfig'
@@ -10,7 +10,7 @@ const SubMenu = Menu.SubMenu;
 /**
  * 左侧导航栏组件
  */
-class LeftNav extends Component{
+class LeftNav extends Component {
 
     /**
      * 根据menu 的数据生成对应的标签数组  动态生成
@@ -18,7 +18,7 @@ class LeftNav extends Component{
      */
     getMenuNodes_map = (menuList) => {
         return menuList.map(item => {
-            if(!item.children){
+            if (!item.children) {
                 return (
                     <Menu.Item key={item.key}>
                         <Link to={item.key}>
@@ -28,7 +28,7 @@ class LeftNav extends Component{
                     </Menu.Item>
                 )
             } else {
-                return(
+                return (
                     <SubMenu
                         key={item.key}
                         title={
@@ -37,7 +37,7 @@ class LeftNav extends Component{
                                 <span>{item.title}</span>
                             </span>
                         }>
-                            {this.getMenuNodes(item.children)}
+                        {this.getMenuNodes(item.children)}
                     </SubMenu>
                 )
             }
@@ -52,7 +52,7 @@ class LeftNav extends Component{
         //得到当前请求的路由路径
         return menuList.reduce((pre, item) => {
             //向pre中添加<Menu.Item>  
-            if(!item.children){
+            if (!item.children) {
                 pre.push((
                     <Menu.Item key={item.key}>
                         <Link to={item.key}>
@@ -61,13 +61,13 @@ class LeftNav extends Component{
                         </Link>
                     </Menu.Item>
                 ))
-            //或者 <SubMenu>
-            }else{
-                
+                //或者 <SubMenu>
+            } else {
+
                 //查找一个与当前请求路径匹配的子Item
-                const cItem = item.children.find(cItem => path.indexOf(cItem.key)===0)
+                const cItem = item.children.find(cItem => path.indexOf(cItem.key) === 0)
                 //如果存在,说明当前item的子列表需要打开
-                if(cItem){
+                if (cItem) {
                     this.openKey = item.key
                 }
                 pre.push((
@@ -79,18 +79,18 @@ class LeftNav extends Component{
                                 <span>{item.title}</span>
                             </span>
                         }>
-                            {this.getMenuNodes(item.children)}
+                        {this.getMenuNodes(item.children)}
                     </SubMenu>
                 ))
             }
-            
-            return pre 
+
+            return pre
         }, [])
     }
 
     //在第一次render()之前执行一次
     //为第一次render()渲染准备数据
-    UNSAFE_componentWillMount () {
+    UNSAFE_componentWillMount() {
         this.menuNodes = this.getMenuNodes(menuList)
     }
 
@@ -100,12 +100,12 @@ class LeftNav extends Component{
         let path = this.props.location.pathname
         //console.log('render()',path)
         //需要打开菜单项的key
-        if(path.indexOf('/product')===0){ //选中的为商品或者商品的子路由
+        if (path.indexOf('/product') === 0) { //选中的为商品或者商品的子路由
             path = '/product'
         }
         const openKey = this.openKey
 
-        return(
+        return (
             <div className="left-nav">
                 <Link to='/' className="left-nav-header">
                     <img src={logo} alt="logo" />
@@ -118,13 +118,13 @@ class LeftNav extends Component{
                     selectedKeys={[path]}
                     defaultOpenKeys={[openKey]}
                 >
-                     {
+                    {
                         this.menuNodes
-                     }
+                    }
                 </Menu>
             </div>
         )
-    } 
+    }
 }
 
 /**

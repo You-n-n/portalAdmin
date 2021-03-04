@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import {
   Form,
@@ -20,11 +20,11 @@ export default class AuthForm extends PureComponent {
     role: PropTypes.object
   }
 
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     // 根据传入角色的menus生成初始状态
-    const {menus} = this.props.role
+    const { menus } = this.props.role
     this.state = {
       checkedKeys: menus
     }
@@ -54,7 +54,7 @@ export default class AuthForm extends PureComponent {
   };
 
 
-  UNSAFE_componentWillMount () {
+  UNSAFE_componentWillMount() {
     this.treeNodes = this.getTreeNodes(menuList)
   }
 
@@ -62,7 +62,7 @@ export default class AuthForm extends PureComponent {
   /*
   当组件接收到新的属性时自动调用
    */
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     console.log('componentWillReceiveProps()', nextProps)
     const menus = nextProps.role.menus
     this.setState({
@@ -73,8 +73,8 @@ export default class AuthForm extends PureComponent {
 
   render() {
     console.log('AuthForm render()')
-    const {role} = this.props
-    const {checkedKeys} = this.state
+    const { role } = this.props
+    const { checkedKeys } = this.state
     // 指定Item布局的配置对象
     const formItemLayout = {
       labelCol: { span: 4 },  // 左侧label的宽度
@@ -84,7 +84,7 @@ export default class AuthForm extends PureComponent {
     return (
       <div>
         <Item label='角色名称' {...formItemLayout}>
-          <Input value={role.name} disabled/>
+          <Input value={role.name} disabled />
         </Item>
 
         <Tree
