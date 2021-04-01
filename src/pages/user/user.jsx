@@ -429,6 +429,7 @@ export default class User extends Component {
             setForm={form => this.form = form}
             roles={roles}
             user={user}
+            isUpdate={user.id ? true : false}
           />
         </Modal>
 

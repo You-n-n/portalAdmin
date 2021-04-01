@@ -6,27 +6,31 @@ import {
   Modal,
   message
 } from 'antd'
+import { reqGetOrder } from '../../api/';
 import LinkButton from "../../components/link-button/index"
 
 export default class ReturnForm extends Component {
+
+  state = {
+    order: [] //获取所有订单列表
+  }
+
   initColumns = () => {
     this.columns = [
       {
-        title: '退单号',
-        dataIndex: 'id',
-        key: 'id'
+        title: '订单号',
+        dataIndex: 'orderId',
+        key: 'orderId'
       },
       {
         title: '下单时间',
-        dataIndex: 'createOrderTime',
-        key: 'createOrderTime',
-        // defaultSortOrder: 'descend',
-        // sorter: (a, b) => a.createOrderTime - b.createOrderTime,
+        dataIndex: 'createTime',
+        key: 'createTime'
       },
       {
         title: '客户名称',
-        dataIndex: 'customerName',
-        key: 'customerName'
+        dataIndex: 'customer',
+        key: 'customer'
       },
 
       {
@@ -36,61 +40,62 @@ export default class ReturnForm extends Component {
         render: (price) => '¥' + price
       },
       {
+        title: '出库/发货',
+        dataIndex: 'isReady',
+        key: 'isReady'
+      },
+      {
         title: '状态',
         dataIndex: 'orderState',
         key: 'orderState'
       },
       {
-        title: '退款状态',
-        dataIndex: 'returnState',
-        key: 'returnState'
+        title: '收款状态',
+        dataIndex: 'payment',
+        key: 'payment'
       },
       {
         title: '操作',
         render: (user) => (
           <span>
             <LinkButton onClick={() => this.showUpdate(user)}>修改</LinkButton>
-            <LinkButton onClick={() => this.deleteUser(user)}>删除</LinkButton>
           </span>
         )
       },
     ]
   }
 
+  getAllOrder = async () => {
+    const result = await reqGetOrder('2')
+    if (result.status === '0') {
+      this.setState({
+        order: result.data
+      })
+    } else {
+      message.error('获取订单列表信息失败')
+    }
+  }
+
 
 
   UNSAFE_componentWillMount() {
     this.initColumns()
-  }
-
-  onChange(pagination, filters, sorter, extra) {
-    //console.log('params', pagination, filters, sorter, extra);
+    this.getAllOrder()
   }
 
   render() {
 
-    const dataSource = [
-      {
-        id: 'DH-O-20201204-319084',
-        createOrderTime: '2020-12-04 12:06',
-        customerName: '个人超市',
-        price: '62.19',
-        orderState: '待出库审核',
-        returnState: '已退款'
-      },
-      {
-        id: 'DH-O-20201204-319455',
-        createOrderTime: '2020-12-04 12:00',
-        customerName: '胡彦兵',
-        price: '10.00',
-        finalInfo: '已出库/已发货',
-        orderState: '待出库审核',
-        returnState: '已退款'
-      },
-    ];
+    const { order } = this.state
 
+    const title = (<span>
+      搜索栏
+    </span>)
 
-    const title = <Button type='primary' onClick={this.showAdd}>新增订单</Button>
+    const extra = (
+      <span>
+        <Button type='primary' onClick={this.getAllOrder}>详情</Button>
+      </span>
+    )
 
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
@@ -105,15 +110,14 @@ export default class ReturnForm extends Component {
     };
 
     return (
-      <Card title={title}>
+      <Card title={title} extra={extra}>
         <Table
           rowSelection={rowSelection}
           bordered
           rowKey='id'
-          dataSource={dataSource}
+          dataSource={order}
           columns={this.columns}
           pagination={{ defaultPageSize: 8 }}
-          onChange={this.onChange}
         />
       </Card>
     )

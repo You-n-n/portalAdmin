@@ -34,7 +34,7 @@ export default class LogDetail extends Component {
     const { afterCntt } = operLogDetail
     const { beforeCntt } = operLogDetail
     let cntt = ''
-    if (null != afterCntt) {
+    if (null !== afterCntt) {
       cntt = afterCntt
     } else {
       cntt = beforeCntt

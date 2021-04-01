@@ -21,7 +21,7 @@ class Password extends Component {
       const { oldPwd } = values
       const { username } = memoryUtils.user
       const result = await reqCheckOldPwd(oldPwd, username)
-      if (null != oldPwd) {
+      if (null !== oldPwd) {
         if ('' === oldPwd) {
           this.setState({
             oldPwdState: ""
@@ -48,7 +48,7 @@ class Password extends Component {
       if (values) {
         const { newPwd, confirmPwd } = values
         const result = await reqCheckNewPwd(newPwd, confirmPwd)
-        if (null != confirmPwd) {
+        if (null !== confirmPwd) {
           if ('' === confirmPwd) {
             this.setState({
               confirmPwdState: ""
@@ -74,7 +74,7 @@ class Password extends Component {
     this.props.form.validateFields(async (error, values) => {
       if (values) {
         const { newPwd } = values
-        if (null != newPwd) {
+        if (null !== newPwd) {
           if ('' === newPwd) {
             this.setState({
               newPwdState: ""

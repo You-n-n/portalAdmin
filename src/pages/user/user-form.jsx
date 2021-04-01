@@ -1,13 +1,14 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import {
   Form,
   Select,
   Input,
   message,
-  Radio 
+  Radio,
+  Cascader
 } from 'antd'
-import {reqToGetAcctId,reqCheckPhone} from '../../api/index'
+import { reqToGetAcctId, reqCheckPhone, reqGetOrgaInfo } from '../../api/index'
 
 const Item = Form.Item
 const Option = Select.Option
@@ -19,119 +20,165 @@ class UserForm extends PureComponent {
 
   static propTypes = {
     setForm: PropTypes.func.isRequired, // 用来传递form对象的函数
-    roles: PropTypes.array.isRequired,
+    //roles: PropTypes.array.isRequired,
     user: PropTypes.object,
   }
 
   state = {
-    accountNameState:'',
-    phoneState:'',
-    usernameState:'',
+    accountNameState: '',
+    phoneState: '',
+    usernameState: '',
     mailState: '',
-    prsnIdNumState:'',
-    sexState:'',
-    orgaState:''
+    prsnIdNumState: '',
+    sexState: '',
+    orgaState: '',
+    options: [], //用于级联选择的组织机构
+    sexs: ''
   }
 
   getAcctId = () => {
-    this.props.form.validateFields( async (error,values) => {
-      if(!error){
-        const{accountName} = values
+    this.props.form.validateFields(async (error, values) => {
+      if (!error) {
+        const { accountName } = values
         const result = await reqToGetAcctId(accountName)
-        if(result.status === '0'){
+        if (result.status === '0') {
           const username1 = result.data
           this.props.form.setFieldsValue({
-            'username':username1
+            'username': username1
           })
-          this.setState({usernameState:'success'})
-        }else{
+          this.setState({ usernameState: 'success' })
+        } else {
           message.error(result.msg)
-          this.setState({usernameState:'error'})
+          this.setState({ usernameState: 'error' })
         }
       }
     })
   }
 
   checkPhone = () => {
-    this.props.form.validateFields( async (error,values) => {
-      if(!error){
-        const{telPhone} = values
+    this.props.form.validateFields(async (error, values) => {
+      if (!error) {
+        const { telPhone } = values
         const result = await reqCheckPhone(telPhone)
-        if(null != telPhone && '' != telPhone){
-          if(result.status != '0'){
+        if (null !== telPhone && '' !== telPhone) {
+          if (result.status !== '0') {
             message.error(result.msg)
-            this.setState({phoneState:'error'})
-          }else{
-            this.setState({phoneState:'success'})
+            this.setState({ phoneState: 'error' })
+          } else {
+            this.setState({ phoneState: 'success' })
           }
-        }else{
-          this.setState({phoneState:''})
+        } else {
+          this.setState({ phoneState: '' })
         }
       }
     })
   }
 
   onAccountName = () => {
-    this.props.form.validateFields( async (error,values) => {
-      if(!error){
-        const{accountName} = values
-        if(null != accountName && '' != accountName){
-          this.setState({accountNameState:'success'})
-        }else{
-          this.setState({accountNameState:''})
+    this.props.form.validateFields(async (error, values) => {
+      if (!error) {
+        const { accountName } = values
+        if (null !== accountName && '' !== accountName) {
+          this.setState({ accountNameState: 'success' })
+        } else {
+          this.setState({ accountNameState: '' })
         }
       }
     })
   }
 
   onMail = () => {
-    this.props.form.validateFields( async (error,values) => {
-      if(!error){
-        const{mail} = values
-      if(null != mail && '' != mail){
-        this.setState({mailState:'success'})
-      }else{
-        this.setState({mailState:''})
-      }
+    this.props.form.validateFields(async (error, values) => {
+      if (!error) {
+        const { mail } = values
+        if (null !== mail && '' !== mail) {
+          this.setState({ mailState: 'success' })
+        } else {
+          this.setState({ mailState: '' })
+        }
       }
     })
   }
 
   onOrga = () => {
-    this.props.form.validateFields( async (error,values) => {
-      if(!error){
-        const{orgaName} = values
-      if(null != orgaName && '' != orgaName){
-        this.setState({orgaState:'success'})
-      }else{
-        this.setState({orgaState:''})
-      }
+    this.props.form.validateFields(async (error, values) => {
+      if (!error) {
+        const { orgaName } = values
+        if (null !== orgaName && '' !== orgaName) {
+          this.setState({ orgaState: 'success' })
+        } else {
+          this.setState({ orgaState: '' })
+        }
       }
     })
   }
 
   onPrsnIdNum = () => {
-    this.props.form.validateFields( async (error,values) => {
-      if(!error){
-        const{prsnIdNum} = values
-      if(null != prsnIdNum && '' != prsnIdNum){
-        this.setState({prsnIdNumState:'success'})
-      }else{
-        this.setState({prsnIdNumState:''})
-      }
+    this.props.form.validateFields(async (error, values) => {
+      if (!error) {
+        const { prsnIdNum } = values
+        if (null !== prsnIdNum && '' !== prsnIdNum) {
+          this.setState({ prsnIdNumState: 'success' })
+        } else {
+          this.setState({ prsnIdNumState: '' })
+        }
       }
     })
   }
 
-  UNSAFE_componentWillMount () {
+  getOrgaInfo = async () => {
+    const result = await reqGetOrgaInfo()
+    const options = result.data.map(c => ({
+      value: c.orgaName,
+      label: c.orgaName,
+    }))
+    this.setState({
+      options: options
+    })
+  }
+
+  sexState = () => {
+    const sexState = this.props.user.sex
+    if (sexState === "男") {
+      this.setState({
+        sexs: '1'
+      })
+    } else if (sexState === "女") {
+      this.setState({
+        sexs: '2'
+      })
+    } else {
+      this.setState({
+        sexs: ''
+      })
+    }
+  }
+
+  UNSAFE_componentWillMount() {
     this.props.setForm(this.props.form)
+    this.getOrgaInfo()
+    this.sexState()
   }
 
   render() {
 
-    const {roles, user} = this.props
+    const { roles, user, isUpdate } = this.props
     const { getFieldDecorator } = this.props.form
-    const {accountNameState,usernameState,phoneState,mailState,prsnIdNumState,sexState,orgaState} = this.state
+    const { accountNameState, usernameState, phoneState, mailState, prsnIdNumState, sexState, orgaState, options, sexs } = this.state
+
+    //用来接收级联分类Id的数组
+    const orgaName = []
+    if (isUpdate) {
+      orgaName.push(user.orgaName)
+    }
+
+    const content = (
+      <Radio.Group name="radiogroup" defaultValue={sexs}>
+        <Radio value={1}>男</Radio>
+        <Radio value={2}>女</Radio>
+      </Radio.Group>
+    )
+
     // 指定Item布局的配置对象
     const formItemLayout = {
       labelCol: { span: 4 },  // 左侧label的宽度
@@ -168,7 +215,7 @@ class UserForm extends PureComponent {
                 autoComplete="off"
                 readOnly={true}
                 onFocus={this.getAcctId}
-             />
+              />
             )
           }
         </Item>
@@ -180,10 +227,7 @@ class UserForm extends PureComponent {
             getFieldDecorator('sex', {
               initialValue: user.sex,
             })(
-              <Radio.Group name="radiogroup" value = {user.sex}>
-                <Radio value={1}>男</Radio>
-                <Radio value={2}>女</Radio>
-              </Radio.Group>
+              <span>{content}</span>
             )
           }
         </Item>
@@ -196,7 +240,7 @@ class UserForm extends PureComponent {
               initialValue: user.telphone,
             })(
               <Input placeholder='请输入手机号'
-                onBlur = {this.checkPhone}
+                onBlur={this.checkPhone}
               />
             )
           }
@@ -207,15 +251,13 @@ class UserForm extends PureComponent {
           validateStatus={orgaState}>
           {
             getFieldDecorator('orgaName', {
-              initialValue: user.orgaName,
+              initialValue: orgaName
             })(
-              <Input placeholder='请输入所属组织'
-                onBlur = {this.onOrga}
-              />
+              <Cascader options={options} placeholder="请选择所属组织机构" />
             )
           }
         </Item>
-        
+
         <Item label='邮箱'
           hasFeedback
           validateStatus={mailState}

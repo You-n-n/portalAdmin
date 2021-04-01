@@ -100,6 +100,8 @@ export const reqLockUser = (ids, acount, username, lockReason) => ajax(BASE + '/
 export const reqBreakLock = (ids, acount, username) => ajax(BASE + '/manage/user/breakLock', ({ ids, acount, username }), 'POST')
 //密码重置
 export const reqResetPwd = (ids, username) => ajax(BASE + '/manage/user/resetPwd', ({ ids, username }), 'POST')
+//查询所有组织Name
+export const reqGetOrgaInfo = () => ajax(BASE + '/manage/user/getOrgaInfo', ({}), 'GET')
 
 
 /**
@@ -110,6 +112,11 @@ export const reqAddRole = (pageNum, pageSize) => ajax(BASE + '/ws/log/info', ({ 
 export const reqUpdateRole = () => ajax(BASE + '/manage/user/addUser', ({}), 'POST')
 export const reqGetAcctRoles = (username) => ajax(BASE + '/manage/role/getAcctRoles', ({ username }), 'POST')
 export const reqUpdAcctRoles = (username, targetKeys, operator) => ajax(BASE + '/manage/role/updAcctRoles', ({ username, targetKeys, operator }), 'POST')
+
+/**
+ * order 订单请求
+ */
+export const reqGetOrder = (orderFlow) => ajax(BASE + '/manage/order/getOrder', ({ orderFlow }), 'POST')
 
 //获取天气信息
 export const reqWeather = () => {

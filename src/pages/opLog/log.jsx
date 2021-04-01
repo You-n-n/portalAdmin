@@ -94,6 +94,9 @@ export default class Log extends Component {
     showName.set("addTime", "添加时间");
     showName.set("prsnIdNum", "身份证号");
     showName.set("ids", "主账号");
+    showName.set("sex", "性别");
+    showName.set("orgaId", "组织机构Id");
+    showName.set("orgaName", "组织机构名称");
 
     showName.set("price", "商品价格¥");
     showName.set("description", "商品描述");

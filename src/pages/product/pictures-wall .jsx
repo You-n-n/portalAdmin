@@ -121,7 +121,7 @@ export default class PicturesWall extends Component {
     return (
       <div>
         <Upload
-          action="/manage/product/uploadImages  " //上传图片的地址
+          action="/go/manage/product/uploadImages  " //上传图片的地址
           accept='image/*'  //只接受图片格式
           listType="picture-card"
           name='file  ' //请求参数名

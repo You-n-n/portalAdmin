@@ -6,26 +6,31 @@ import {
   Modal,
   message
 } from 'antd'
+import { reqGetOrder } from '../../api/';
 import LinkButton from "../../components/link-button/index"
 
 export default class OrderForm extends Component {
+
+  state = {
+    order: [] //获取所有订单列表
+  }
 
   initColumns = () => {
     this.columns = [
       {
         title: '订单号',
-        dataIndex: 'id',
-        key: 'id'
+        dataIndex: 'orderId',
+        key: 'orderId'
       },
       {
         title: '下单时间',
-        dataIndex: 'createOrderTime',
-        key: 'createOrderTime'
+        dataIndex: 'createTime',
+        key: 'createTime'
       },
       {
         title: '客户名称',
-        dataIndex: 'customerName',
-        key: 'customerName'
+        dataIndex: 'customer',
+        key: 'customer'
       },
 
       {
@@ -36,8 +41,8 @@ export default class OrderForm extends Component {
       },
       {
         title: '出库/发货',
-        dataIndex: 'finalInfo',
-        key: 'finalInfo'
+        dataIndex: 'isReady',
+        key: 'isReady'
       },
       {
         title: '状态',
@@ -46,52 +51,52 @@ export default class OrderForm extends Component {
       },
       {
         title: '收款状态',
-        dataIndex: 'paymentState',
-        key: 'paymentState'
+        dataIndex: 'payment',
+        key: 'payment'
       },
       {
         title: '操作',
         render: (user) => (
           <span>
             <LinkButton onClick={() => this.showUpdate(user)}>修改</LinkButton>
-            <LinkButton onClick={() => this.deleteUser(user)}>删除</LinkButton>
           </span>
         )
       },
     ]
   }
 
+  getAllOrder = async () => {
+    const result = await reqGetOrder('1')
+    if (result.status === '0') {
+      this.setState({
+        order: result.data
+      })
+    } else {
+      message.error('获取订单列表信息失败')
+    }
+  }
+
 
 
   UNSAFE_componentWillMount() {
     this.initColumns()
+    this.getAllOrder()
   }
+
 
   render() {
 
-    const dataSource = [
-      {
-        id: 'DH-O-20201204-319084',
-        createOrderTime: '2020-12-04 12:06',
-        customerName: '个人超市',
-        price: '62.19',
-        finalInfo: '备货中/代发货',
-        orderState: '待出库审核',
-        paymentState: '未收款'
-      },
-      {
-        id: 'DH-O-20201204-319455',
-        createOrderTime: '2020-12-04 12:00',
-        customerName: '胡彦兵',
-        price: '10.00',
-        finalInfo: '已出库/已发货',
-        orderState: '待收货确认',
-        paymentState: '已收款'
-      },
-    ];
+    const { order } = this.state
 
+    const title = (<span>
+      搜索栏
+    </span>)
 
-    const title = <Button type='primary' onClick={this.showAdd}>新增订单</Button>
+    const extra = (
+      <span>
+        <Button type='primary' onClick={this.getAllOrder}>详情</Button>
+      </span>
+    )
 
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
@@ -106,12 +111,12 @@ export default class OrderForm extends Component {
     };
 
     return (
-      <Card title={title}>
+      <Card title={title} extra={extra}>
         <Table
           rowSelection={rowSelection}
           bordered
           rowKey='id'
-          dataSource={dataSource}
+          dataSource={order}
           columns={this.columns}
           pagination={{ defaultPageSize: 8 }}
         />
