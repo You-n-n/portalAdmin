@@ -102,6 +102,8 @@ export const reqBreakLock = (ids, acount, username) => ajax(BASE + '/manage/user
 export const reqResetPwd = (ids, username) => ajax(BASE + '/manage/user/resetPwd', ({ ids, username }), 'POST')
 //查询所有组织Name
 export const reqGetOrgaInfo = () => ajax(BASE + '/manage/user/getOrgaInfo', ({}), 'GET')
+//导出用户数据
+export const reqExportUserInfo = () => ajax(BASE + '/manage/export/test', ({}), 'GET')
 
 
 /**

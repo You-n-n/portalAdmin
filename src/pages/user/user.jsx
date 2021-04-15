@@ -8,7 +8,7 @@ import {
 } from 'antd'
 import { formateDate } from "../../utils/dateUtils"
 import LinkButton from "../../components/link-button/index"
-import { reqDeleteUser, reqUsers, reqAddOrUpdateUser, reqLockUser, reqBreakLock, reqResetPwd } from "../../api/index";
+import { reqDeleteUser, reqUsers, reqAddOrUpdateUser, reqLockUser, reqBreakLock, reqResetPwd, reqExportUserInfo } from "../../api/index";
 import UserForm from './user-form'
 import AuthType from './authtype'
 import LockReason from './lockreason'
@@ -295,12 +295,12 @@ export default class User extends Component {
     const result = await reqAddOrUpdateUser(user, username)
     // 3. 更新列表显示
     if (result.status === '0') {
-      this.setState({ isShow: false })
       message.success(`${this.user ? '修改' : '添加'}用户成功`)
       this.getUsers()
     } else {
       message.error(result.msg)
     }
+    this.setState({ isShow: false })
   }
 
   getUsers = async () => {
@@ -357,6 +357,19 @@ export default class User extends Component {
     }
   }
 
+  /**
+   * 导出用户数据请求  
+   */
+  onExportUserInfo = async () => {
+    const result = await reqExportUserInfo()
+    if ('0' === result.status) {
+      message.success('正在导出，请稍后查看')
+    } else {
+      message.error('导出异常，请稍后重试')
+    }
+
+  }
+
   UNSAFE_componentWillMount() {
     this.initColumns()
   }
@@ -376,7 +389,8 @@ export default class User extends Component {
     </span>)
     const extra = (
       <span>
-        <Button type='primary' onClick={this.lockUser}>锁定</Button>
+        <Button style={{ margin: '0 15px' }} type='primary' onClick={this.lockUser}>锁定</Button>
+        <Button type='primary' onClick={this.onExportUserInfo}> 导出 </Button>
         <Button style={{ margin: '0 15px' }} type='primary' onClick={this.breakLock}>解锁</Button>
         <Button style={{ width: 90, margin: '0 15px 0 0' }} type='primary' onClick={this.authType}>角色配置</Button>
         <Button type='primary' onClick={this.onResetPwd}>密码重置</Button>

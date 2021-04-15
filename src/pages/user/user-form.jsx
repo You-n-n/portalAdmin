@@ -59,8 +59,8 @@ class UserForm extends PureComponent {
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
         const { telPhone } = values
-        const result = await reqCheckPhone(telPhone)
-        if (null !== telPhone && '' !== telPhone) {
+        if (null !== telPhone && '' !== telPhone && undefined !== telPhone) {
+          const result = await reqCheckPhone(telPhone)
           if (result.status !== '0') {
             message.error(result.msg)
             this.setState({ phoneState: 'error' })
@@ -78,7 +78,7 @@ class UserForm extends PureComponent {
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
         const { accountName } = values
-        if (null !== accountName && '' !== accountName) {
+        if (null !== accountName && '' !== accountName && undefined !== accountName) {
           this.setState({ accountNameState: 'success' })
         } else {
           this.setState({ accountNameState: '' })
@@ -91,7 +91,8 @@ class UserForm extends PureComponent {
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
         const { mail } = values
-        if (null !== mail && '' !== mail) {
+        if (null !== mail && '' !== mail && undefined !== mail) {
+          console.log(mail)
           this.setState({ mailState: 'success' })
         } else {
           this.setState({ mailState: '' })
@@ -104,7 +105,7 @@ class UserForm extends PureComponent {
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
         const { orgaName } = values
-        if (null !== orgaName && '' !== orgaName) {
+        if (null !== orgaName && '' !== orgaName && undefined !== orgaName) {
           this.setState({ orgaState: 'success' })
         } else {
           this.setState({ orgaState: '' })
@@ -117,7 +118,7 @@ class UserForm extends PureComponent {
     this.props.form.validateFields(async (error, values) => {
       if (!error) {
         const { prsnIdNum } = values
-        if (null !== prsnIdNum && '' !== prsnIdNum) {
+        if (null !== prsnIdNum && '' !== prsnIdNum && undefined !== prsnIdNum) {
           this.setState({ prsnIdNumState: 'success' })
         } else {
           this.setState({ prsnIdNumState: '' })
@@ -141,11 +142,11 @@ class UserForm extends PureComponent {
     const sexState = this.props.user.sex
     if (sexState === "男") {
       this.setState({
-        sexs: '1'
+        sexs: '男'
       })
     } else if (sexState === "女") {
       this.setState({
-        sexs: '2'
+        sexs: '女'
       })
     } else {
       this.setState({
@@ -174,8 +175,8 @@ class UserForm extends PureComponent {
 
     const content = (
       <Radio.Group name="radiogroup" defaultValue={sexs}>
-        <Radio value={1}>男</Radio>
-        <Radio value={2}>女</Radio>
+        <Radio value='男'>男</Radio>
+        <Radio value='女'>女</Radio>
       </Radio.Group>
     )
 

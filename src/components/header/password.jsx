@@ -139,6 +139,7 @@ class Password extends Component {
                 (
                   <Input placeholder='请输入原密码'
                     onBlur={this.checkOldPwd}
+                    autoComplete="off"
                   />
                 )
 
@@ -178,6 +179,7 @@ class Password extends Component {
               })(
                 <Input placeholder='请再次确认密码'
                   onBlur={this.checkNewPwd}
+                  autoComplete="off"
                 />
               )
             }
