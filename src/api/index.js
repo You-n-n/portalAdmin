@@ -89,13 +89,18 @@ export const reqDeleteUser = (ids, username, account) => ajax(BASE + '/manage/us
 export const reqUsers = () => ajax(BASE + '/manage/user/userInfo', ({}), 'GET')
 //添加或者修改用户信息
 export const reqAddOrUpdateUser = (user, username) => ajax(BASE + '/manage/user/addUser', ({ user, username }), 'POST')
+//获取用户主账号
 export const reqToGetAcctId = (accountName) => ajax(BASE + '/manage/user/toGetAcctId', ({ accountName }), 'POST')
+//用户新增->检查手机号格式
 export const reqCheckPhone = (telPhone) => ajax(BASE + '/manage/user/checkPhone', ({ telPhone }), 'POST')
+//密码修改->检查旧密码
 export const reqCheckOldPwd = (oldPwd, username) => ajax(BASE + '/manage/user/checkPwd', ({ oldPwd, username }), 'POST')
+//密码修改->检查新密码
 export const reqCheckNewPwd = (newPwd, confirmPwd) => ajax(BASE + '/manage/user/checkPwd', ({ newPwd, confirmPwd }), 'POST')
+//密码修改
 export const reqUpdatePwd = (oldPwd, newPwd, username) => ajax(BASE + '/manage/user/updPwd', ({ oldPwd, newPwd, username }), 'POST')
 //用户锁定
-export const reqLockUser = (ids, acount, username, lockReason) => ajax(BASE + '/manage/user/lockUser', ({ ids, acount, username, lockReason }), 'POST')
+export const reqLockUser = (ids, account, username, lockReason) => ajax(BASE + '/manage/user/lockUser', ({ ids, account, username, lockReason }), 'POST')
 //用户解锁
 export const reqBreakLock = (ids, acount, username) => ajax(BASE + '/manage/user/breakLock', ({ ids, acount, username }), 'POST')
 //密码重置
@@ -105,15 +110,37 @@ export const reqGetOrgaInfo = () => ajax(BASE + '/manage/user/getOrgaInfo', ({})
 //导出用户数据
 export const reqExportUserInfo = () => ajax(BASE + '/manage/export/test', ({}), 'GET')
 
+/**
+ * customer 客户请求
+ */
+//查询所有用户信息
+export const reqGetCtmAll = () => ajax(BASE + '/manage/customer/getCtmAll', ({}), 'GET')
+//用户注销
+export const reqDelCtm = (ids, ctmName, username) => ajax(BASE + '/manage/customer/delCtm', ({ ids, ctmName, username }), 'POST')
+
 
 /**
  * role 角色请求
  */
-export const reqRoles = () => ajax(BASE + '/manage/role/getAllRole', ({}), 'POST')
-export const reqAddRole = (pageNum, pageSize) => ajax(BASE + '/ws/log/info', ({ pageNum, pageSize }), 'POST')
-export const reqUpdateRole = () => ajax(BASE + '/manage/user/addUser', ({}), 'POST')
+//查询所有的角色信息
+export const reqRoles = () => ajax(BASE + '/manage/role/getAllRole', ({}), 'GET')
+//获取某用户的角色
 export const reqGetAcctRoles = (username) => ajax(BASE + '/manage/role/getAcctRoles', ({ username }), 'POST')
+//修改某用户的权限
 export const reqUpdAcctRoles = (username, targetKeys, operator) => ajax(BASE + '/manage/role/updAcctRoles', ({ username, targetKeys, operator }), 'POST')
+//查询该角色下的所有权限
+export const reqGetRoleAuths = (roleId) => ajax(BASE + '/manage/role/getRoleAuths', ({ roleId }), 'Get')
+
+/**
+ * 
+ * auth 权限请求
+ */
+//查询所有的权限列表
+export const reqGetAuth = () => ajax(BASE + '/manage/role/getAllAuth', ({}), 'GET')
+//修改权限状态
+export const requpdAuthState = (useful, id, username) => ajax(BASE + '/manage/role/updAuthState', ({ useful, id, username }), 'POST')
+//修改角色的权限
+export const reqUpdRoleAuths = (roleId, targetKeys, operator) => ajax(BASE + '/manage/role/updRoleAuths', ({ roleId, targetKeys, operator }), 'POST')
 
 /**
  * order 订单请求

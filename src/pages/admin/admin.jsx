@@ -16,7 +16,6 @@ import Pie from '../charts/pie'
 import OrderForm from '../order/orderForm'
 import ReturnForm from '../order/returnForm'
 import Customer from '../customer/customer'
-import Task from '../task/task'
 import Auth from '../role/auth'
 
 const { Footer, Sider, Content } = Layout;
@@ -52,7 +51,6 @@ export default class Admin extends Component {
                             <Route path='/customer' component={Customer} />
                             <Route path='/order/orderForm' component={OrderForm} />
                             <Route path='/order/returnForm' component={ReturnForm} />
-                            <Route path='/task' component={Task} />
                             <Route path='/log' component={Log} />
                             <Route path='/charts/bar' component={Bar} />
                             <Route path='/charts/line' component={Line} />

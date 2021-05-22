@@ -71,11 +71,6 @@ const menuList = [
         icon: 'solution',
     },
     {
-        title: '定时任务',
-        key: '/task',
-        icon: 'sync',
-    },
-    {
         title: '图形图表',
         key: '/charts',
         icon: 'area-chart',

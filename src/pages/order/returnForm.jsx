@@ -4,7 +4,8 @@ import {
   Button,
   Table,
   Modal,
-  message
+  message,
+  Descriptions
 } from 'antd'
 import { reqGetOrder } from '../../api/';
 import LinkButton from "../../components/link-button/index"
@@ -12,7 +13,9 @@ import LinkButton from "../../components/link-button/index"
 export default class ReturnForm extends Component {
 
   state = {
-    order: [] //获取所有订单列表
+    order: [], //获取所有订单列表
+    orderModal: false,
+    myOrder: []
   }
 
   initColumns = () => {
@@ -34,7 +37,7 @@ export default class ReturnForm extends Component {
       },
 
       {
-        title: '金额',
+        title: '实付金额',
         dataIndex: 'price',
         key: 'price',
         render: (price) => '¥' + price
@@ -56,13 +59,21 @@ export default class ReturnForm extends Component {
       },
       {
         title: '操作',
-        render: (user) => (
+        render: (order) => (
           <span>
-            <LinkButton onClick={() => this.showUpdate(user)}>修改</LinkButton>
+            <LinkButton onClick={() => this.showModal(order)}>详情</LinkButton>
           </span>
         )
       },
     ]
+  }
+
+  showModal = (order) => {
+    console.log(order)
+    this.setState({
+      orderModal: true,
+      myOrder: order
+    })
   }
 
   getAllOrder = async () => {
@@ -76,8 +87,6 @@ export default class ReturnForm extends Component {
     }
   }
 
-
-
   UNSAFE_componentWillMount() {
     this.initColumns()
     this.getAllOrder()
@@ -85,7 +94,7 @@ export default class ReturnForm extends Component {
 
   render() {
 
-    const { order } = this.state
+    const { order, orderModal, myOrder } = this.state
 
     const title = (<span>
       搜索栏
@@ -93,7 +102,7 @@ export default class ReturnForm extends Component {
 
     const extra = (
       <span>
-        <Button type='primary' onClick={this.getAllOrder}>详情</Button>
+        <Button type='primary' onClick={this.getAllOrder}>导出</Button>
       </span>
     )
 
@@ -119,6 +128,28 @@ export default class ReturnForm extends Component {
           columns={this.columns}
           pagination={{ defaultPageSize: 8 }}
         />
+
+        <Modal
+          title="订单详情"
+          visible={orderModal}
+          onOk={() => { this.setState({ orderModal: false }) }}
+          onCancel={() => { this.setState({ orderModal: false }) }}
+          okText="确认"
+          cancelText="取消"
+          width={750}
+        >
+          <Descriptions
+            layout="vertical"
+            bordered
+            column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
+          >
+            <Descriptions.Item label="客户名称">{myOrder.customer}</Descriptions.Item>
+            <Descriptions.Item label="电话号">{myOrder.telPhone}</Descriptions.Item>
+            <Descriptions.Item label="商品名称">{myOrder.productName}</Descriptions.Item>
+            <Descriptions.Item label="商品价格\¥">{myOrder.productPrice}</Descriptions.Item>
+            <Descriptions.Item label="收货地址">{myOrder.address}</Descriptions.Item>
+          </Descriptions>
+        </Modal>
       </Card>
     )
   }

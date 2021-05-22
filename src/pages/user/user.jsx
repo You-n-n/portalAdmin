@@ -168,6 +168,9 @@ export default class User extends Component {
         if (result.status === '0') {
           message.success(result.msg)
           this.getUsers()
+        } else {
+          message.error(result.msg)
+          this.getUsers()
         }
       }
     })
@@ -269,6 +272,9 @@ export default class User extends Component {
           if (result.status === '0') {
             message.success(result.msg)
             this.getUsers()
+          } else {
+            message.error(result.msg)
+            this.getUsers()
           }
         }
       })
@@ -363,7 +369,7 @@ export default class User extends Component {
   onExportUserInfo = async () => {
     const result = await reqExportUserInfo()
     if ('0' === result.status) {
-      message.success('正在导出，请稍后查看')
+      message.success(result.msg)
     } else {
       message.error('导出异常，请稍后重试')
     }

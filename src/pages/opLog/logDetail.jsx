@@ -34,7 +34,7 @@ export default class LogDetail extends Component {
     const { afterCntt } = operLogDetail
     const { beforeCntt } = operLogDetail
     let cntt = ''
-    if (null !== afterCntt) {
+    if (undefined !== afterCntt) {
       cntt = afterCntt
     } else {
       cntt = beforeCntt
@@ -43,10 +43,15 @@ export default class LogDetail extends Component {
       const showName = this.props.showName
       const cntts = JSON.parse(cntt)
       let listData = [];
+      //使用for循环将cnnts（json数据，操作内容）进行解析，将json数据=>Map集合
       Object.keys(cntts).forEach(key => {
+        //声明一个Map集合
         let jsonObj = { "key": "", "value": "" };
+        //key值存放数据名称，showName是为了转换数据，例如：name->姓名，age->年龄。对应“a”的内容
         jsonObj.key = showName.get(key) ? showName.get(key) : key;
+        //value存放“b”的内容
         jsonObj.value = cntts[key];
+        //将解析玩的数据存入list中用于最后的展示
         listData.push(jsonObj)
       })
       this.setState({
